@@ -32,3 +32,23 @@ defaults write com.apple.finder ShowPathbar -bool true
 
 # Show Status Bar in Finder
 defaults write com.apple.finder ShowStatusBar -bool true
+
+# Set the default view style to detailed list
+defaults write com.apple.finder FXPreferredViewStyle Nlsv
+
+# 
+# Homebrew
+# 
+
+# Check for Homebrew, and then install it
+if test ! "$(which brew)"; then
+    echo "Installing homebrew..."
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    echo "Homebrew installed successfully"
+else
+    echo "Homebrew already installed!"
+fi
+
+# Install XCode Command Line Tools
+echo 'Checking to see if XCode Command Line Tools are installed...'
+brew config
