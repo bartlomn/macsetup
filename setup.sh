@@ -59,8 +59,9 @@ defaults write com.apple.finder FXPreferredViewStyle Nlsv
 if test ! "$(which brew)"; then
     echo "Installing homebrew..."
     NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-    echo '# Set PATH, MANPATH, etc., for Homebrew.' >> /Users/bnowak/.zprofile
-    echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> /Users/bnowak/.zprofile
+    echo '# Set PATH, MANPATH, etc., for Homebrew.' >> ~/.zprofile
+    echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
+    source ~/.zprofile
     eval "$(/opt/homebrew/bin/brew shellenv)"
     echo "Homebrew installed successfully"
 else
@@ -83,8 +84,29 @@ brew upgrade
 echo "Installing Git..."
 brew install git
 
+# Install Docker
+echo "Installing Docker..."
+brew install docker
+
 # Misc Apps
 echo "Installing Browsers..."
-brew cask install --appdir="/Applications" firefox
-brew cask install --appdir="/Applications" chrome
-brew cask install --appdir="/Applications" microsoft-edge
+brew install --appdir="/Applications" --cask firefox
+brew install --appdir="/Applications" --cask google-chrome
+brew install --appdir="/Applications" --cask microsoft-edge
+
+echo "Installing MS Office..."
+brew install --appdir="/Applications" --cask microsoft-outlook
+brew install --appdir="/Applications" --cask microsoft-word
+brew install --appdir="/Applications" --cask microsoft-excel
+
+echo "Installing Other apps..."
+brew install --appdir="/Applications" --cask alfred
+brew install --appdir="/Applications" --cask authy
+brew install --appdir="/Applications" --cask diffmerge
+brew install --appdir="/Applications" --cask evernote
+brew install --appdir="/Applications" --cask franz
+brew install --appdir="/Applications" --cask hyper
+brew install --appdir="/Applications" --cask postman
+brew install --appdir="/Applications" --cask sourcetree
+brew install --appdir="/Applications" --cask spotify
+brew install --appdir="/Applications" --cask visual-studio-code
