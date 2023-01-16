@@ -59,6 +59,9 @@ defaults write com.apple.finder FXPreferredViewStyle Nlsv
 if test ! "$(which brew)"; then
     echo "Installing homebrew..."
     NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    echo '# Set PATH, MANPATH, etc., for Homebrew.' >> /Users/bnowak/.zprofile
+    echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> /Users/bnowak/.zprofile
+    eval "$(/opt/homebrew/bin/brew shellenv)"
     echo "Homebrew installed successfully"
 else
     echo "Homebrew already installed!"
@@ -67,3 +70,21 @@ fi
 # Install XCode Command Line Tools
 echo 'Checking to see if XCode Command Line Tools are installed...'
 brew config
+
+# Updating Homebrew.
+echo "Updating Homebrew..."
+brew update
+
+# Upgrade any already-installed formulae.
+echo "Upgrading Homebrew..."
+brew upgrade
+
+# Install Git
+echo "Installing Git..."
+brew install git
+
+# Misc Apps
+echo "Installing Browsers..."
+brew cask install --appdir="/Applications" firefox
+brew cask install --appdir="/Applications" chrome
+brew cask install --appdir="/Applications" microsoft-edge
