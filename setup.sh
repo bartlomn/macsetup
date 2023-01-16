@@ -80,13 +80,13 @@ brew update
 echo "Upgrading Homebrew..."
 brew upgrade
 
-# Install Git
-echo "Installing Git..."
-brew install git
+# Install command line apps
+echo "Installing commandline apps..."
+brew install \
+git \
+docker \
+nvm
 
-# Install Docker
-echo "Installing Docker..."
-brew install docker
 
 # Misc Apps
 echo "Installing Browsers..."
@@ -106,7 +106,9 @@ brew install --appdir="/Applications" --cask diffmerge
 brew install --appdir="/Applications" --cask evernote
 brew install --appdir="/Applications" --cask franz
 brew install --appdir="/Applications" --cask hyper
+brew install --appdir="/Applications" --cask licecap
 brew install --appdir="/Applications" --cask postman
 brew install --appdir="/Applications" --cask sourcetree
 brew install --appdir="/Applications" --cask spotify
 brew install --appdir="/Applications" --cask visual-studio-code
+brew install --appdir="/Applications" --cask vlc
