@@ -151,6 +151,5 @@ code --install-extension timonwong.shellcheck
 code --install-extension mtxr.sqltools
 code --install-extension mtxr.sqltools-driver-pg
 code --install-extension rangav.vscode-thunder-client
-code --install-extension jpoissonnier.vscode-styled-components
 code --install-extension redhat.vscode-yaml
 code --install-extension ms-kubernetes-tools.vscode-kubernetes-tools
