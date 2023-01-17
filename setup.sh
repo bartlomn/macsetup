@@ -83,7 +83,17 @@ brew upgrade
 # 
 # OH MY ZSH
 # 
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+if [ -d ~/.oh-my-zsh ]; then
+	echo "oh-my-zsh is already installed"
+ else
+ 	echo "installing oh-my-zsh"
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+    git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+    # then manually Set ZSH_THEME="powerlevel10k/powerlevel10k" in ~/.zshrc.
+    # and enable  plugins: plugins=(aws docker docker-compose encode64 git helm kubectl zsh-autosuggestions zsh-syntax-highlighting)
+fi
 
 # 
 # APPS
@@ -94,7 +104,8 @@ echo "Installing commandline apps..."
 brew install \
 git \
 docker \
-nvm
+z \
+fnm
 
 # Misc Apps
 echo "Installing Browsers..."
@@ -120,3 +131,26 @@ brew install --appdir="/Applications" --cask sourcetree
 brew install --appdir="/Applications" --cask spotify
 brew install --appdir="/Applications" --cask visual-studio-code
 brew install --appdir="/Applications" --cask vlc
+
+echo "Installing VSCode extensions"
+code --install-extension ms-azuretools.vscode-docker
+code --install-extension EditorConfig.EditorConfig
+code --install-extension nrwl.angular-console
+code --install-extension dbaeumer.vscode-eslint
+code --install-extension eamodio.gitlens
+code --install-extension wix.vscode-import-cost
+code --install-extension VisualStudioExptTeam.vscodeintellicode
+code --install-extension VisualStudioExptTeam.intellicode-api-usage-examples
+code --install-extension DavidAnson.vscode-markdownlint
+code --install-extension unifiedjs.vscode-mdx
+code --install-extension jebbs.plantuml
+code --install-extension esbenp.prettier-vscode
+code --install-extension Prisma.prisma
+code --install-extension foxundermoon.shell-format
+code --install-extension timonwong.shellcheck
+code --install-extension mtxr.sqltools
+code --install-extension mtxr.sqltools-driver-pg
+code --install-extension rangav.vscode-thunder-client
+code --install-extension jpoissonnier.vscode-styled-components
+code --install-extension redhat.vscode-yaml
+code --install-extension ms-kubernetes-tools.vscode-kubernetes-tools
