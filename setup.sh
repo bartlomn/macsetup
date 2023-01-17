@@ -80,13 +80,21 @@ brew update
 echo "Upgrading Homebrew..."
 brew upgrade
 
+# 
+# OH MY ZSH
+# 
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+# 
+# APPS
+# 
+
 # Install command line apps
 echo "Installing commandline apps..."
 brew install \
 git \
 docker \
 nvm
-
 
 # Misc Apps
 echo "Installing Browsers..."
