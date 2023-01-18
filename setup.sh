@@ -103,9 +103,10 @@ fi
 echo "Installing commandline apps..."
 brew install \
 git \
-docker \
 z \
-fnm
+fnm \
+kubectl \
+helm
 
 # Misc Apps
 echo "Installing Browsers..."
@@ -122,6 +123,7 @@ echo "Installing Other apps..."
 brew install --appdir="/Applications" --cask alfred
 brew install --appdir="/Applications" --cask authy
 brew install --appdir="/Applications" --cask diffmerge
+brew install --appdir="/Applications" --cask docker
 brew install --appdir="/Applications" --cask evernote
 brew install --appdir="/Applications" --cask franz
 brew install --appdir="/Applications" --cask hyper
