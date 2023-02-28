@@ -97,45 +97,53 @@ if [ -d ~/.oh-my-zsh ]; then
     # and enable  plugins: plugins=(aws docker docker-compose encode64 git helm kubectl zsh-autosuggestions zsh-syntax-highlighting)
     mv ~/.zshrc ~/.zshrc.bak
     sed 's/^plugins=.*$/plugins=(aws docker docker-compose encode64 git helm kubectl zsh-autosuggestions zsh-syntax-highlighting)/g' ~/.zshrc.bak > ~/.zshrc
+    # Download required fonts
+    cd /Library/Fonts || exit
+    curl -L -O \
+    "https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf" \
+    "https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf" \
+    "https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf" \
+    "https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf"
+    cd ~ || exit
 fi
 
 # 
 # APPS
 # 
 
-# echo "Installing docker"
-# brew install --appdir="/Applications" --cask docker
+echo "Installing docker"
+brew install --appdir="/Applications" --cask docker
 
-# echo "Installing commandline apps..."
-# brew install \
-# git \
-# z \
-# fnm \
-# kubectl \
-# helm
+echo "Installing commandline apps..."
+brew install \
+git \
+z \
+fnm \
+kubectl \
+helm
 
-# echo "Installing Browsers..."
-# brew install --appdir="/Applications" --cask arc
-# brew install --appdir="/Applications" --cask firefox
-# brew install --appdir="/Applications" --cask google-chrome
-# brew install --appdir="/Applications" --cask microsoft-edge
+echo "Installing Browsers..."
+brew install --appdir="/Applications" --cask arc
+brew install --appdir="/Applications" --cask firefox
+brew install --appdir="/Applications" --cask google-chrome
+brew install --appdir="/Applications" --cask microsoft-edge
 
-# echo "Installing MS Office..."
-# brew install --appdir="/Applications" --cask microsoft-outlook
-# brew install --appdir="/Applications" --cask microsoft-word
-# brew install --appdir="/Applications" --cask microsoft-excel
-# brew install --appdir="/Applications" --cask microsoft-powerpoint
+echo "Installing MS Office..."
+brew install --appdir="/Applications" --cask microsoft-outlook
+brew install --appdir="/Applications" --cask microsoft-word
+brew install --appdir="/Applications" --cask microsoft-excel
+brew install --appdir="/Applications" --cask microsoft-powerpoint
 
-# echo "Installing Other apps..."
-# brew install --appdir="/Applications" --cask alfred
-# brew install --appdir="/Applications" --cask authy
-# brew install --appdir="/Applications" --cask diffmerge
-# brew install --appdir="/Applications" --cask evernote
-# brew install --appdir="/Applications" --cask franz
-# brew install --appdir="/Applications" --cask hyper
-# brew install --appdir="/Applications" --cask licecap
-# brew install --appdir="/Applications" --cask postman
-# brew install --appdir="/Applications" --cask sourcetree
-# brew install --appdir="/Applications" --cask spotify
-# brew install --appdir="/Applications" --cask visual-studio-code
-# brew install --appdir="/Applications" --cask vlc
+echo "Installing Other apps..."
+brew install --appdir="/Applications" --cask alfred
+brew install --appdir="/Applications" --cask authy
+brew install --appdir="/Applications" --cask diffmerge
+brew install --appdir="/Applications" --cask evernote
+brew install --appdir="/Applications" --cask franz
+brew install --appdir="/Applications" --cask hyper
+brew install --appdir="/Applications" --cask licecap
+brew install --appdir="/Applications" --cask postman
+brew install --appdir="/Applications" --cask sourcetree
+brew install --appdir="/Applications" --cask spotify
+brew install --appdir="/Applications" --cask visual-studio-code
+brew install --appdir="/Applications" --cask vlc
