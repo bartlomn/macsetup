@@ -144,5 +144,6 @@ brew install --appdir="/Applications" --cask licecap
 brew install --appdir="/Applications" --cask postman
 brew install --appdir="/Applications" --cask sourcetree
 brew install --appdir="/Applications" --cask spotify
+brew install --appdir="/Applications" --cask toggl-track
 brew install --appdir="/Applications" --cask visual-studio-code
 brew install --appdir="/Applications" --cask vlc
