@@ -100,58 +100,37 @@ fi
 # 
 
 # Install command line apps
-echo "Installing commandline apps..."
-brew install \
-git \
-z \
-fnm \
-kubectl \
-helm
+# echo "Installing commandline apps..."
+# brew install \
+# git \
+# z \
+# fnm \
+# kubectl \
+# helm
 
 # Misc Apps
-echo "Installing Browsers..."
-brew install --appdir="/Applications" --cask firefox
-brew install --appdir="/Applications" --cask google-chrome
-brew install --appdir="/Applications" --cask microsoft-edge
+# echo "Installing Browsers..."
+# brew install --appdir="/Applications" --cask arc
+# brew install --appdir="/Applications" --cask firefox
+# brew install --appdir="/Applications" --cask google-chrome
+# brew install --appdir="/Applications" --cask microsoft-edge
 
-echo "Installing MS Office..."
-brew install --appdir="/Applications" --cask microsoft-outlook
-brew install --appdir="/Applications" --cask microsoft-word
-brew install --appdir="/Applications" --cask microsoft-excel
+# echo "Installing MS Office..."
+# brew install --appdir="/Applications" --cask microsoft-outlook
+# brew install --appdir="/Applications" --cask microsoft-word
+# brew install --appdir="/Applications" --cask microsoft-excel
 
-echo "Installing Other apps..."
-brew install --appdir="/Applications" --cask alfred
-brew install --appdir="/Applications" --cask authy
-brew install --appdir="/Applications" --cask diffmerge
-brew install --appdir="/Applications" --cask docker
-brew install --appdir="/Applications" --cask evernote
-brew install --appdir="/Applications" --cask franz
-brew install --appdir="/Applications" --cask hyper
-brew install --appdir="/Applications" --cask licecap
-brew install --appdir="/Applications" --cask postman
-brew install --appdir="/Applications" --cask sourcetree
-brew install --appdir="/Applications" --cask spotify
-brew install --appdir="/Applications" --cask visual-studio-code
-brew install --appdir="/Applications" --cask vlc
-
-echo "Installing VSCode extensions"
-code --install-extension ms-azuretools.vscode-docker
-code --install-extension EditorConfig.EditorConfig
-code --install-extension nrwl.angular-console
-code --install-extension dbaeumer.vscode-eslint
-code --install-extension eamodio.gitlens
-code --install-extension wix.vscode-import-cost
-code --install-extension VisualStudioExptTeam.vscodeintellicode
-code --install-extension VisualStudioExptTeam.intellicode-api-usage-examples
-code --install-extension DavidAnson.vscode-markdownlint
-code --install-extension unifiedjs.vscode-mdx
-code --install-extension jebbs.plantuml
-code --install-extension esbenp.prettier-vscode
-code --install-extension Prisma.prisma
-code --install-extension foxundermoon.shell-format
-code --install-extension timonwong.shellcheck
-code --install-extension mtxr.sqltools
-code --install-extension mtxr.sqltools-driver-pg
-code --install-extension rangav.vscode-thunder-client
-code --install-extension redhat.vscode-yaml
-code --install-extension ms-kubernetes-tools.vscode-kubernetes-tools
+# echo "Installing Other apps..."
+# brew install --appdir="/Applications" --cask alfred
+# brew install --appdir="/Applications" --cask authy
+# brew install --appdir="/Applications" --cask diffmerge
+# brew install --appdir="/Applications" --cask docker
+# brew install --appdir="/Applications" --cask evernote
+# brew install --appdir="/Applications" --cask franz
+# brew install --appdir="/Applications" --cask hyper
+# brew install --appdir="/Applications" --cask licecap
+# brew install --appdir="/Applications" --cask postman
+# brew install --appdir="/Applications" --cask sourcetree
+# brew install --appdir="/Applications" --cask spotify
+# brew install --appdir="/Applications" --cask visual-studio-code
+# brew install --appdir="/Applications" --cask vlc
