@@ -91,15 +91,21 @@ if [ -d ~/.oh-my-zsh ]; then
     git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
     git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
     git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
-    # then manually Set ZSH_THEME="powerlevel10k/powerlevel10k" in ~/.zshrc.
+    # then Set ZSH_THEME="powerlevel10k/powerlevel10k" in ~/.zshrc.
+    mv ~/.zshrc ~/.zshrc.bak
+    sed 's/ZSH_THEME="robbyrussell"/ZSH_THEME="powerlevel10k\/powerlevel10k"/g' ~/.zshrc.bak > ~/.zshrc
     # and enable  plugins: plugins=(aws docker docker-compose encode64 git helm kubectl zsh-autosuggestions zsh-syntax-highlighting)
+    mv ~/.zshrc ~/.zshrc.bak
+    sed 's/^plugins=.*$/plugins=(aws docker docker-compose encode64 git helm kubectl zsh-autosuggestions zsh-syntax-highlighting)/g' ~/.zshrc.bak > ~/.zshrc
 fi
 
 # 
 # APPS
 # 
 
-# Install command line apps
+# echo "Installing docker"
+# brew install --appdir="/Applications" --cask docker
+
 # echo "Installing commandline apps..."
 # brew install \
 # git \
@@ -108,7 +114,6 @@ fi
 # kubectl \
 # helm
 
-# Misc Apps
 # echo "Installing Browsers..."
 # brew install --appdir="/Applications" --cask arc
 # brew install --appdir="/Applications" --cask firefox
@@ -119,12 +124,12 @@ fi
 # brew install --appdir="/Applications" --cask microsoft-outlook
 # brew install --appdir="/Applications" --cask microsoft-word
 # brew install --appdir="/Applications" --cask microsoft-excel
+# brew install --appdir="/Applications" --cask microsoft-powerpoint
 
 # echo "Installing Other apps..."
 # brew install --appdir="/Applications" --cask alfred
 # brew install --appdir="/Applications" --cask authy
 # brew install --appdir="/Applications" --cask diffmerge
-# brew install --appdir="/Applications" --cask docker
 # brew install --appdir="/Applications" --cask evernote
 # brew install --appdir="/Applications" --cask franz
 # brew install --appdir="/Applications" --cask hyper
