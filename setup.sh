@@ -115,6 +115,7 @@ brew install --appdir="/Applications" --cask docker
 
 echo "Installing commandline apps..."
 brew install \
+aws \
 git \
 z \
 fnm \
@@ -138,7 +139,6 @@ brew install --appdir="/Applications" --cask alfred
 brew install --appdir="/Applications" --cask authy
 brew install --appdir="/Applications" --cask diffmerge
 brew install --appdir="/Applications" --cask evernote
-brew install --appdir="/Applications" --cask franz
 brew install --appdir="/Applications" --cask hyper
 brew install --appdir="/Applications" --cask licecap
 brew install --appdir="/Applications" --cask postman
