@@ -115,7 +115,8 @@ brew install --appdir="/Applications" --cask docker
 
 echo "Installing commandline apps..."
 brew install \
-aws \
+aws-cdk \
+awscli \
 git \
 z \
 fnm \
