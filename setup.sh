@@ -136,6 +136,7 @@ brew install --appdir="/Applications" --cask microsoft-excel
 brew install --appdir="/Applications" --cask microsoft-powerpoint
 
 echo "Installing Other apps..."
+brew install --appdir="/Applications" --cask aldente
 brew install --appdir="/Applications" --cask alfred
 brew install --appdir="/Applications" --cask authy
 brew install --appdir="/Applications" --cask diffmerge
