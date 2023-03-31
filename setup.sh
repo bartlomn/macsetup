@@ -118,10 +118,11 @@ brew install \
 aws-cdk \
 awscli \
 git \
-z \
 fnm \
+helm \
+k9s \
 kubectl \
-helm
+z
 
 echo "Installing Browsers..."
 brew install --appdir="/Applications" --cask arc
@@ -139,10 +140,12 @@ echo "Installing Other apps..."
 brew install --appdir="/Applications" --cask aldente
 brew install --appdir="/Applications" --cask alfred
 brew install --appdir="/Applications" --cask authy
+brew install --appdir="/Applications" --cask balenaetcher
 brew install --appdir="/Applications" --cask diffmerge
 brew install --appdir="/Applications" --cask evernote
 brew install --appdir="/Applications" --cask hyper
 brew install --appdir="/Applications" --cask licecap
+brew install --appdir="/Applications" --cask openlens
 brew install --appdir="/Applications" --cask postman
 brew install --appdir="/Applications" --cask sourcetree
 brew install --appdir="/Applications" --cask spotify
