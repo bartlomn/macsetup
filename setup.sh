@@ -112,6 +112,12 @@ if [ -d ~/.oh-my-zsh ]; then
 fi
 
 # 
+# ROSETTA
+# 
+echo "Installing Rosetta..."
+softwareupdate --istall-rosetta --agree-to-license
+
+# 
 # APPS
 # 
 
