@@ -121,8 +121,25 @@ git \
 fnm \
 helm \
 k9s \
-kubectl \
-z
+kubectl
+
+# Add fnm to the zshrc file
+echo "Adding fnm to zshrc..."
+# Define the lines to be added
+fnm_line1="# Enable FNM"
+fnm_line2='eval "$(fnm env --use-on-cd)"'
+
+# File to update
+zshrc_file="$HOME/.zshrc"
+
+# Check if the second line is already in the file
+if ! grep -qF "$fnm_line2" "$zshrc_file"; then
+    # If it's not found, add the lines at the beginning of the file
+    echo -e "$fnm_line1\n$fnm_line2\n$(cat "$zshrc_file")" > "$zshrc_file"
+    echo "Added FNM to $zshrc_file."
+else
+    echo "FNM already present in $zshrc_file."
+fi
 
 echo "Installing Browsers..."
 brew install --appdir="/Applications" --cask arc
@@ -139,14 +156,10 @@ brew install --appdir="/Applications" --cask microsoft-powerpoint
 echo "Installing Other apps..."
 brew install --appdir="/Applications" --cask aldente
 brew install --appdir="/Applications" --cask alfred
-brew install --appdir="/Applications" --cask authy
 brew install --appdir="/Applications" --cask balenaetcher
 brew install --appdir="/Applications" --cask diffmerge
 brew install --appdir="/Applications" --cask evernote
-brew install --appdir="/Applications" --cask hyper
-brew install --appdir="/Applications" --cask licecap
-brew install --appdir="/Applications" --cask openlens
-brew install --appdir="/Applications" --cask postman
+brew install --appdir="/Applications" --cask kitty
 brew install --appdir="/Applications" --cask sourcetree
 brew install --appdir="/Applications" --cask spotify
 brew install --appdir="/Applications" --cask visual-studio-code
