@@ -16,6 +16,11 @@ done 2>/dev/null &
 
 
 # 
+# DARK MODE
+#
+osascript -e 'tell app "System Events" to tell appearance preferences to set dark mode to true'
+
+# 
 # DOCK CONFIG
 #
 
