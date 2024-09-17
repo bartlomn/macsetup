@@ -23,17 +23,13 @@ sudo apt update
 sudo apt upgrade -y
 
 # 
-# PACKAGES
-# 
-echo "installing packages"
-sudo apt install zsh kitty-terminfo
-
-# 
 # OH MY ZSH
 # 
 if [ -d ~/.oh-my-zsh ]; then
 	echo "oh-my-zsh is already installed"
  else
+    echo "installing packages"
+    sudo apt install -y zsh kitty-terminfo
     echo "Setting up fonts..."
     sudo mkdir "/usr/share/fonts/truetype/MesloLGS NF" && cd "$_" || exit
     sudo curl -L -O "https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf" \
@@ -57,3 +53,30 @@ if [ -d ~/.oh-my-zsh ]; then
     sudo chsh -s "$(which zsh)"
 fi
 
+# 
+# COCKPIT
+#
+# This requires swithing to NetworkManager first
+netplan_file_path="/etc/netplan/01.netcfg.yaml"
+if [ ! -f "$netplan_file_path" ]; then
+    # Use netowork manager as renderer
+    echo -e "network:\n  version: 2\n  renderer: NetworkManager" | sudo tee "$netplan_file_path" > /dev/null
+    sudo chmod 600 "$netplan_file_path"
+    sudo netplan apply
+    # disable networkd
+    sudo systemctl stop systemd-networkd
+    sudo systemctl disable systemd-networkd
+    sudo systemctl mask systemd-networkd
+
+    sudo systemctl stop systemd-networkd-wait-online.service
+    sudo systemctl disable systemd-networkd-wait-online.service
+    sudo systemctl mask systemd-networkd-wait-online.service
+    # enable NetworkManager 
+    sudo systemctl unmask NetworkManager
+    sudo systemctl enable NetworkManager
+    sudo systemctl start NetworkManager
+else
+    echo "Network manager already configured. No action taken."
+fi
+echo "Installing Cockpit packages"
+sudo apt install -y cockpit cockpit-pcp
