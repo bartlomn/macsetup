@@ -56,7 +56,7 @@ fi
 # 
 # COCKPIT
 #
-# This requires swithing to NetworkManager first
+# This requires switching to NetworkManager first
 netplan_file_path="/etc/netplan/01.netcfg.yaml"
 if [ ! -f "$netplan_file_path" ]; then
     # Use netowork manager as renderer
@@ -78,5 +78,9 @@ if [ ! -f "$netplan_file_path" ]; then
 else
     echo "Network manager already configured. No action taken."
 fi
+# Packages
 echo "Installing Cockpit packages"
 sudo apt install -y cockpit cockpit-pcp
+wget https://github.com/ocristopfer/cockpit-sensors/releases/latest/download/cockpit-sensors.deb
+sudo apt -f install -y ./cockpit-sensors.deb --fix-broken
+rm ./cockpit-sensors.deb
