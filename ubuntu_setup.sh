@@ -84,3 +84,6 @@ sudo apt install -y cockpit cockpit-pcp
 wget https://github.com/ocristopfer/cockpit-sensors/releases/latest/download/cockpit-sensors.deb
 sudo apt -f install -y ./cockpit-sensors.deb --fix-broken
 rm ./cockpit-sensors.deb
+wget https://github.com/45Drives/cockpit-benchmark/releases/download/v2.1.1/cockpit-benchmark_2.1.1-1focal_all.deb
+sudo apt -f install -y ./cockpit-benchmark_2.1.1-1focal_all.deb --fix-broken
+rm ./cockpit-benchmark_2.1.1-1focal_all.deb
