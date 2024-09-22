@@ -80,7 +80,7 @@ else
 fi
 # Packages
 echo "Installing Cockpit packages"
-sudo apt install -y cockpit cockpit-pcp
+sudo apt install -y cockpit cockpit-pcp cockpit-machines cockpit-podman
 wget https://github.com/ocristopfer/cockpit-sensors/releases/latest/download/cockpit-sensors.deb
 sudo apt -f install -y ./cockpit-sensors.deb --fix-broken
 rm ./cockpit-sensors.deb
