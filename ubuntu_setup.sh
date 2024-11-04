@@ -114,7 +114,7 @@ if ! grep -q '^// bnowak custom config' "$UUPGR_LOCAL"; then
     curl -fsSL "$UUPGR_REMOTE" -o /tmp/50unattended-upgrades.conf
 
     # Replace the contents of the local file with the downloaded file
-    sudo cat /tmp/50unattended-upgrades.conf | sudo tee "$LOCAL_FILE" > /dev/null
+    sudo cat /tmp/50unattended-upgrades.conf | sudo tee "$UUPGR_LOCAL" > /dev/null
     
     # Generate a random time between 02:00 and 05:00
     RANDOM_HOUR=$((RANDOM % 4 + 2))  # This will give a value between 2 and 5
