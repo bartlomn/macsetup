@@ -55,7 +55,7 @@ fi
 
 
 # Install podman if not present
-if ! dpkg -l | grep -q "^iiW\*podman"; then
+if ! dpkg -l | grep -q "^ii\W*podman"; then
     echo "Installing podman"
     sudo apt install -y podman
 else
