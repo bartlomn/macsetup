@@ -99,3 +99,34 @@ if ! dpkg -l | grep -q "^ii.*cockpit"; then
 else
     echo "Cockpit is already installed. Skipping installation."
 fi
+
+#
+# Unattended upgrades config
+#
+
+# Define the local and remote files
+UUPGR_LOCAL="/etc/apt/apt.conf.d/50unattended-upgrades"
+UUPGR_REMOTE="https://raw.githubusercontent.com/bartlomn/macsetup/main/50unattended-upgrades.conf"
+
+# Check if the local file starts with the specific comment
+if ! grep -q '^// bnowak custom config' "$UUPGR_LOCAL"; then
+    # Download the new configuration file
+    curl -fsSL "$UUPGR_REMOTE" -o /tmp/50unattended-upgrades.conf
+
+    # Replace the contents of the local file with the downloaded file
+    mv /tmp/50unattended-upgrades.conf "$UUPGR_LOCAL"
+    
+    # Generate a random time between 02:00 and 05:00
+    RANDOM_HOUR=$((RANDOM % 4 + 2))  # This will give a value between 2 and 5
+    RANDOM_MINUTE=$((RANDOM % 60))   # Random minute between 0 and 59
+    
+    # Format the time for the Unattended-Upgrade setting
+    RANDOM_TIME=$(printf "%02d:%02d" "$RANDOM_HOUR" "$RANDOM_MINUTE")
+    
+    # Replace the line for Automatic-Reboot-Time with the random time
+    sed -i "s/Unattended-Upgrade::Automatic-Reboot-Time \".*\";/Unattended-Upgrade::Automatic-Reboot-Time \"$RANDOM_TIME\";/" "$UUPGR_LOCAL"
+    
+    echo "Successfully updated $UUPGR_LOCAL with new content and randomized the reboot time to $RANDOM_TIME."
+else
+    echo "$UUPGR_LOCAL already contains the custom config. No changes made."
+fi
