@@ -125,7 +125,7 @@ if ! grep -q '^// bnowak custom config' "$UUPGR_LOCAL"; then
     
     # Replace the line for Automatic-Reboot-Time with the random time
     sudo sed -i "s/Unattended-Upgrade::Automatic-Reboot-Time \".*\";/Unattended-Upgrade::Automatic-Reboot-Time \"$RANDOM_TIME\";/" "$UUPGR_LOCAL"
-    
+    sudo rm /tmp/50unattended-upgrades.conf
     echo "Successfully updated $UUPGR_LOCAL with new content and randomized the reboot time to $RANDOM_TIME."
 else
     echo "$UUPGR_LOCAL already contains the custom config. No changes made."
