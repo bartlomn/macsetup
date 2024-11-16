@@ -57,7 +57,7 @@ fi
 # Install podman if not present
 if ! dpkg -l | grep -q "^ii\W*podman"; then
     echo "Installing podman"
-    sudo apt install -y podman
+    sudo apt install -y podman containerd.io
 else
     echo "Podman is already installed. Skipping installation."
 fi
@@ -92,13 +92,23 @@ fi
 # Install cockpit if not present
 if ! dpkg -l | grep -q "^ii.*cockpit"; then
     echo "Installing Cockpit packages"
-    sudo apt install -y cockpit cockpit-pcp cockpit-machines cockpit-podman
+    sudo apt install -y cockpit cockpit-pcp cockpit-machines cockpit-podman virt-manager
     wget https://github.com/ocristopfer/cockpit-sensors/releases/latest/download/cockpit-sensors.deb
     sudo apt -f install -y ./cockpit-sensors.deb --fix-broken
     rm ./cockpit-sensors.deb
 else
     echo "Cockpit is already installed. Skipping installation."
 fi
+
+
+# Install certbot if not present
+if ! dpkg -l | grep -q "^ii\W*certbot"; then
+    echo "Installing certbot"
+    sudo apt install -y certbot python3-certbot-dns-cloudflare
+else
+    echo "Certbot is already installed. Skipping installation."
+fi
+
 
 #
 # Unattended upgrades config
