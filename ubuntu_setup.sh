@@ -54,8 +54,8 @@ if [ -d ~/.oh-my-zsh ]; then
     mv ~/.zshrc ~/.zshrc.bak
     sed 's/^plugins=.*$/plugins=(aws docker docker-compose encode64 git helm kubectl zsh-autosuggestions zsh-syntax-highlighting)/g' ~/.zshrc.bak > ~/.zshrc
 
-    echo "Changing default shell..."
-    sudo chsh -s "$(which zsh)"
+    # echo "Changing default shell..."
+    # sudo chsh -s "$(which zsh)"
 fi
 
 
