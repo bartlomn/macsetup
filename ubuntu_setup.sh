@@ -74,6 +74,8 @@ fi
 # This requires switching to NetworkManager first
 netplan_file_path="/etc/netplan/01.netcfg.yaml"
 if [ ! -f "$netplan_file_path" ]; then
+    # install packages
+    sudo apt install -y network-manager net-tools
     # Use netowork manager as renderer
     echo -e "network:\n  version: 2\n  renderer: NetworkManager" | sudo tee "$netplan_file_path" > /dev/null
     sudo chmod 600 "$netplan_file_path"
