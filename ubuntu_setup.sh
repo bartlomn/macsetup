@@ -18,7 +18,9 @@ done 2>/dev/null &
 # 
 # APT
 #
+echo "##########################"
 echo "Performing apt upgrades..."
+echo "##########################"
 sudo apt update
 sudo apt upgrade -y
 
@@ -28,10 +30,13 @@ sudo apt upgrade -y
 if [ -d ~/.oh-my-zsh ]; then
 	echo "oh-my-zsh is already installed"
  else
-    echo "installing packages"
+    echo "##########################"
+    echo "installing zsh packages"
+    echo "##########################"
     sudo apt install -y zsh kitty-terminfo
     echo "Setting up fonts..."
-    sudo mkdir "/usr/share/fonts/truetype/MesloLGS NF" && cd "$_" || exit
+    zsh_fonts_dir="/usr/share/fonts/truetype/MesloLGS NF"
+    sudo mkdir "$zsh_fonts_dir" && cd "$zsh_fonts_dir" || exit
     sudo curl -L -O "https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf" \
     -L -O "https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf" \
     -L -O "https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf" \
