@@ -36,12 +36,12 @@ if [ -d ~/.oh-my-zsh ]; then
     sudo apt install -y zsh kitty-terminfo
     echo "Setting up fonts..."
     zsh_fonts_dir="/usr/share/fonts/truetype/MesloLGS NF"
-    sudo mkdir "$zsh_fonts_dir" && cd "$zsh_fonts_dir" || exit
+    sudo mkdir "$zsh_fonts_dir" && cd "$zsh_fonts_dir"
     sudo curl -L -O "https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf" \
     -L -O "https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf" \
     -L -O "https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf" \
     -L -O "https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf"
-    cd ~ || exit
+    cd ~
  	echo "installing oh-my-zsh"
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
     git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
