@@ -103,6 +103,27 @@ if ! dpkg -l | grep -q "^ii.*cockpit"; then
     wget https://github.com/ocristopfer/cockpit-sensors/releases/latest/download/cockpit-sensors.deb
     sudo apt -f install -y ./cockpit-sensors.deb --fix-broken
     rm ./cockpit-sensors.deb
+
+    # Change cockpit port from default 9090 to 443
+    # Variables for directories and file paths
+    COCKPIT_SOCKET_TARGET_DIR="/etc/systemd/system/cockpit.socket.d"
+    COCKPIT_SOCKET_CONFIG_FILE="${COCKPIT_SOCKET_TARGET_DIR}/listen.conf"
+    # Create the directory if it doesn't exist
+    if [ ! -d "$COCKPIT_SOCKET_TARGET_DIR" ]; then
+    echo "Creating directory: $COCKPIT_SOCKET_TARGET_DIR"
+    sudo mkdir -p "$COCKPIT_SOCKET_TARGET_DIR"
+    fi
+    # Create or overwrite the file with the specified content
+    echo "Writing to file: $COCKPIT_SOCKET_CONFIG_FILE"
+    sudo bash -c "cat > $COCKPIT_SOCKET_CONFIG_FILE" << 'EOF'
+[Socket]
+ListenStream=
+ListenStream=443
+EOF
+    # Reload services
+    sudo systemctl daemon-reload
+    sudo systemctl restart cockpit.socket
+
 else
     echo "Cockpit is already installed. Skipping installation."
 fi
