@@ -62,7 +62,7 @@ fi
 # Install podman if not present
 if ! dpkg -l | grep -q "^ii\W*podman"; then
     echo "Installing podman"
-    sudo apt install -y podman containerd.io
+    sudo apt install -y podman
 else
     echo "Podman is already installed. Skipping installation."
 fi
@@ -77,7 +77,7 @@ if [ ! -f "$netplan_file_path" ]; then
     # install packages
     sudo apt install -y network-manager net-tools
     # Use netowork manager as renderer
-    echo -e "network:\n  version: 2\n  renderer: NetworkManager" | sudo tee "$netplan_file_path" > /dev/null
+    printf "network:\n  version: 2\n  renderer: NetworkManager" | sudo tee "$netplan_file_path" > /dev/null
     sudo chmod 600 "$netplan_file_path"
     sudo netplan apply
     # disable networkd
