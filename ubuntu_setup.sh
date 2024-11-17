@@ -88,18 +88,10 @@ if [ ! -f "$netplan_file_path" ]; then
     printf "network:\n  version: 2\n  renderer: NetworkManager" | sudo tee "$netplan_file_path" > /dev/null
     sudo chmod 600 "$netplan_file_path"
     sudo netplan apply
-    # # disable networkd
-    # sudo systemctl stop systemd-networkd
-    # sudo systemctl disable systemd-networkd
-    # sudo systemctl mask systemd-networkd
-
-    # sudo systemctl stop systemd-networkd-wait-online.service
-    # sudo systemctl disable systemd-networkd-wait-online.service
-    # sudo systemctl mask systemd-networkd-wait-online.service
-    # # enable NetworkManager 
-    # sudo systemctl unmask NetworkManager
-    # sudo systemctl enable NetworkManager
-    # sudo systemctl start NetworkManager
+    # disable networkd wait-online target
+    sudo systemctl stop systemd-networkd-wait-online.service
+    sudo systemctl disable systemd-networkd-wait-online.service
+    sudo systemctl mask systemd-networkd-wait-online.service
 else
     echo "Network manager already configured. No action taken."
 fi
