@@ -59,6 +59,14 @@ if [ -d ~/.oh-my-zsh ]; then
 fi
 
 
+# Install 7zip if not present
+if ! dpkg -l | grep -q "^ii\W*7zip"; then
+    echo "Installing 7zip"
+    sudo apt install -y 7zip
+else
+    echo "7zip is already installed. Skipping installation."
+fi
+
 # Install podman if not present
 if ! dpkg -l | grep -q "^ii\W*podman"; then
     echo "Installing podman"
