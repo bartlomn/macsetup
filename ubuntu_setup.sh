@@ -75,6 +75,14 @@ else
     echo "Podman is already installed. Skipping installation."
 fi
 
+# Install eza if not present
+if ! dpkg -l | grep -q "^ii\W*eza"; then
+    echo "Installing eza"
+    sudo apt install -y eza
+else
+    echo "eza is already installed. Skipping installation."
+fi
+
 # 
 # COCKPIT
 #
