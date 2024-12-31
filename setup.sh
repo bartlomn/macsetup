@@ -135,10 +135,10 @@ helm \
 k9s \
 kubectl
 
-# Add fnm to the zshrc file
-echo "Adding fnm to zshrc..."
+# Add customisations to the zshrc file
+echo "Adding customisations to zshrc..."
 # Define the lines to be added
-fnm_line1="# Enable FNM"
+fnm_line1='alias ls="eza --icons --group-directories-first"'
 fnm_line2='eval "$(fnm env --use-on-cd)"'
 
 # File to update
@@ -148,9 +148,9 @@ zshrc_file="$HOME/.zshrc"
 if ! grep -qF "$fnm_line2" "$zshrc_file"; then
     # If it's not found, add the lines at the beginning of the file
     echo -e "$fnm_line1\n$fnm_line2\n$(cat "$zshrc_file")" > "$zshrc_file"
-    echo "Added FNM to $zshrc_file."
+    echo "Added customisations to $zshrc_file."
 else
-    echo "FNM already present in $zshrc_file."
+    echo "customisations already present in $zshrc_file."
 fi
 
 echo "Installing Browsers..."
