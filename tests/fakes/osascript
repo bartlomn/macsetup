@@ -1,0 +1,6 @@
+#!/bin/bash
+# Setting dark mode shows up in the fake defaults store, as AppleInterfaceStyle does for real.
+printf 'osascript %s\n' "$*" >> "$FAKE_LOG"
+case "$*" in
+  *"set dark mode to true"*) printf 'NSGlobalDomain|AppleInterfaceStyle|Dark\n' >> "$FAKE_LOG.defaults" ;;
+esac

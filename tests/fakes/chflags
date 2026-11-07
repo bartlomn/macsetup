@@ -1,0 +1,3 @@
+#!/bin/bash
+printf 'chflags %s\n' "$*" >> "$FAKE_LOG"
+exec /usr/bin/chflags "$@"

@@ -1,0 +1,4 @@
+#!/bin/bash
+printf 'fdesetup %s\n' "$*" >> "$FAKE_LOG"
+[ "$1" = "status" ] && printf 'FileVault is Off.\n'
+exit 0

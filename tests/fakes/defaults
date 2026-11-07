@@ -1,0 +1,21 @@
+#!/bin/bash
+# Remembers values in $FAKE_LOG.defaults, storing bools as 1 and 0 like the real one.
+# FAKE_DEFAULTS_WRITE_FAIL names a key whose write fails.
+store="$FAKE_LOG.defaults"
+touch "$store"
+case "$1" in
+  read)
+    line="$(grep -F "$2|$3|" "$store" | tail -1)"
+    [ -n "$line" ] || exit 1
+    printf '%s\n' "${line##*|}"
+    ;;
+  write)
+    printf 'defaults %s\n' "$*" >> "$FAKE_LOG"
+    [ "$3" = "${FAKE_DEFAULTS_WRITE_FAIL:-}" ] && exit 1
+    value="$5"
+    if [ "$4" = "-bool" ]; then
+      [ "$value" = "true" ] && value=1 || value=0
+    fi
+    printf '%s|%s|%s\n' "$2" "$3" "$value" >> "$store"
+    ;;
+esac

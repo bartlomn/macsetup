@@ -1,0 +1,4 @@
+#!/bin/bash
+printf 'socketfilterfw %s\n' "$*" >> "$FAKE_LOG"
+[ "$1" = "--getglobalstate" ] && printf 'Firewall is enabled. (State = 1)\n'
+exit 0

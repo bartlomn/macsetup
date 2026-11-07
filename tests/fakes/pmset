@@ -1,0 +1,25 @@
+#!/bin/bash
+# Remembers values in $FAKE_LOG.pmset. FAKE_PMSET_NO_AUTORESTART=1 drops that capability.
+# FAKE_PMSET_NO_HEADINGS=1 prints the settings without the power source headings.
+store="$FAKE_LOG.pmset"
+[ -f "$store" ] || printf 'sleep 10\nwomp 0\nautorestart 0\n' > "$store"
+if [ "$1" = "-g" ] && [ "$2" = "custom" ]; then
+  if [ "${FAKE_PMSET_NO_HEADINGS:-}" = "1" ]; then
+    sed 's/^/ /' "$store"
+  else
+    printf 'Battery Power:\n sleep 99\n womp 99\n autorestart 99\nAC Power:\n'
+    sed 's/^/ /' "$store"
+  fi
+elif [ "$1" = "-g" ] && [ "$2" = "cap" ]; then
+  printf 'Capabilities for AC Power:\n sleep\n womp\n'
+  [ "${FAKE_PMSET_NO_AUTORESTART:-}" = "1" ] || printf ' autorestart\n'
+else
+  printf 'pmset %s\n' "$*" >> "$FAKE_LOG"
+  shift
+  while [ $# -gt 1 ]; do
+    grep -v "^$1 " "$store" > "$store.new"
+    printf '%s %s\n' "$1" "$2" >> "$store.new"
+    mv "$store.new" "$store"
+    shift 2
+  done
+fi
