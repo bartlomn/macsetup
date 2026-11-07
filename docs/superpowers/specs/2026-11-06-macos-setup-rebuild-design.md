@@ -177,12 +177,13 @@ like `--all`.)
 
 ### The list
 
-Default apps: `zen`, `google-chrome`, `kitty`, `docker-desktop`, `claude`, `claude-code`, `codex`,
-`bitwarden`, `localsend`.
+Default apps: `zen`, `google-chrome`, `kitty`, `claude`, `claude-code`, `codex`, `bitwarden`,
+`localsend`.
 
 Optional apps: `alfred`, `balenaetcher`, `evernote`, `vlc`, `spotify`, `meetily`, `handy`,
 `cyberduck`, `slack`, `dbeaver-community`, `raspberry-pi-imager`, `gpg-suite`, `gcloud-cli`,
-`coderabbit`.
+`coderabbit`, `docker-desktop` (optional by the owner's choice, as the 8 GB mini may struggle with
+it).
 
 Default CLI tools: `aws-cdk`, `awscli`, `eza`, `git`, `fnm`, `helm`, `k9s`, `kubectl`, `direnv`,
 `gh`, `git-lfs`, `go-task`, `kubectx`, `tfenv`, `yq`, `tmux`, `glow`, `ncdu`, `rename`, `z`.

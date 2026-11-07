@@ -135,7 +135,7 @@ tests/zsh_startup.py      Real zsh startup check in a pty
   - `classify_items <file>`: prints `kind<TAB>token<TAB>tier<TAB>state<TAB>desc`, where state is `brew`, `outside` or `missing`. `outside` means a cask is not installed by Homebrew but one of its apps exists under `MACSETUP_APPS_DIR` (default `/Applications`).
 
 - [ ] **Step 1: Write the failing tests** in `tests/apps.bats`:
-  - `Brewfile matches the spec`: exact counts of 9 default casks, 14 optional casks, 20 default formulae, 9 optional formulae.
+  - `Brewfile matches the spec`: exact counts of 8 default casks, 15 optional casks, 20 default formulae, 9 optional formulae.
   - `excluded items are absent`: `sshpass`, `gemini-cli`, `arc`, `cursor`, `visual-studio-code`, `orca` and the rest of the spec's exclusions.
   - `alias counts as installed`: fixture with `kubernetes-cli` installed and alias `kubectl`; a Brewfile line of `brew "kubectl"` classifies as `brew`.
   - `renamed cask counts as installed`: fixture where `docker-desktop` has old token `docker`; `cask "docker"` classifies as `brew`.
