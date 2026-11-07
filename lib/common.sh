@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 # Step runner, end summary and small helpers shared by install.sh, macos.sh and lib/*.sh.
 # Scripts do not use set -e: a failed step is recorded, and dependent work gates on step's status.
 

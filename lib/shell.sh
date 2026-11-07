@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 # Writes the stub ~/.zshrc, links the prompt config, and installs Oh My Zsh, the theme, the plugins
 # and the fonts. Each has its own check, and anything fetched is moved into place once complete,
 # so an interrupted run blocks nothing.

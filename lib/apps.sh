@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 # Brewfile parsing, classification of what is already installed, and the picker.
 
 MACSETUP_LIB_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
