@@ -254,6 +254,9 @@ Requirements:
   fetched to a temporary path and moved into place once complete, so "it exists" means "it finished",
   and an interrupted run cannot leave a partial clone or truncated font that blocks a re-run.
 - Fonts save with real spaces in their names and use `curl -f`, so a 404 cannot become a `.ttf`.
+- No terminal's font is configured, by the owner's choice. Icons already work in kitty, which bundles
+  its own symbols font. The README says Terminal.app needs `MesloLGS NF` set by hand, and the summary
+  says so when the script runs in Terminal.app.
 - `p10k configure` will probably offer to edit `~/.zshrc`, which should be declined. Worth a
   comment in the stub or README.
 
