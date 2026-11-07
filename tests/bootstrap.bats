@@ -220,6 +220,7 @@ handed_over() {
   git init -q -b main "$HOME/.macsetup"
   git -C "$HOME/.macsetup" remote add origin git@github.com:bartlomn/macsetup.git
   cp "$UPSTREAM/HEAD" "$HOME/.macsetup/untouched"
+  touch "$HOME/.macsetup/install.sh"
   GIT_SSH_COMMAND=false MACSETUP_REPO_URL="https://github.com/bartlomn/macsetup.git" run_bootstrap
   [ -f "$HOME/.macsetup/untouched" ]
   [ -z "$(ls -a "$HOME" | grep 'macsetup-bak')" ]

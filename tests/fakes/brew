@@ -1,10 +1,19 @@
 #!/bin/bash
 # FAKE_GUM_INSTALL_FAIL=1 fails installing gum. FAKE_GUM_INSTALLED=1 makes it already present.
+# FAKE_BREW_INFO is a JSON file served by info. FAKE_BREW_INFO_FAIL=1 makes info fail.
 printf 'brew %s\n' "$*" >> "$FAKE_LOG"
 case "${1:-}" in
   shellenv)
     # shellcheck disable=SC2016
     printf 'export PATH="%s:$PATH"\n' "$(cd "$(dirname "$0")" && pwd)"
+    ;;
+  info)
+    [ "${FAKE_BREW_INFO_FAIL:-}" = "1" ] && exit 1
+    case " $* " in
+      *" --formula "*) keep=formulae ;;
+      *) keep=casks ;;
+    esac
+    /usr/bin/python3 -c 'import json,sys; d=json.load(open(sys.argv[1])); print(json.dumps({"formulae":[],"casks":[], sys.argv[2]:d[sys.argv[2]]}))' "$FAKE_BREW_INFO" "$keep"
     ;;
   list)
     [ "${2:-}" = "gum" ] && [ "${FAKE_GUM_INSTALLED:-}" != "1" ] && exit 1
