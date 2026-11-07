@@ -1,0 +1,7 @@
+#!/bin/bash
+# Stands in for Homebrew's installer: puts the fake brew at the first MACSETUP_BREW_PATHS entry.
+printf 'brew-installer NONINTERACTIVE=%s\n' "${NONINTERACTIVE:-}" >> "$FAKE_LOG"
+[ "${FAKE_BREW_INSTALL_FAIL:-}" = "1" ] && exit 1
+target="${MACSETUP_BREW_PATHS%%:*}"
+mkdir -p "$(dirname "$target")"
+cp "$(dirname "$0")/brew" "$target"

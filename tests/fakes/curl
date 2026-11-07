@@ -2,6 +2,9 @@
 # FAKE_CURL_FAIL=1 fails after leaving a partial file, as an interrupted download can.
 # FAKE_CURL_BODY sets the content written to -o.
 printf 'curl %s\n' "$*" >> "$FAKE_LOG"
+case "$*" in
+  *Homebrew/install*) FAKE_CURL_BODY='exec brew-installer' ;;
+esac
 out=""
 while [ $# -gt 0 ]; do
   case "$1" in

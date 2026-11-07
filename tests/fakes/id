@@ -1,0 +1,7 @@
+#!/bin/bash
+# FAKE_ID_GROUPS replaces the output of id -Gn. Anything else goes to the real id.
+if [ "${1:-}" = "-Gn" ]; then
+  printf '%s\n' "${FAKE_ID_GROUPS:-staff admin}"
+  exit 0
+fi
+exec /usr/bin/id "$@"
