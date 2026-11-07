@@ -1,0 +1,20 @@
+#!/bin/bash
+# FAKE_CURL_FAIL=1 fails after leaving a partial file, as an interrupted download can.
+# FAKE_CURL_BODY sets the content written to -o.
+printf 'curl %s\n' "$*" >> "$FAKE_LOG"
+out=""
+while [ $# -gt 0 ]; do
+  case "$1" in
+    -o) out="$2"; shift ;;
+  esac
+  shift
+done
+if [ "${FAKE_CURL_FAIL:-}" = "1" ]; then
+  [ -n "$out" ] && printf 'partial' > "$out"
+  exit 22
+fi
+if [ -n "$out" ]; then
+  printf '%s' "${FAKE_CURL_BODY:-downloaded}" > "$out"
+else
+  printf '%s' "${FAKE_CURL_BODY:-downloaded}"
+fi

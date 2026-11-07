@@ -1,0 +1,8 @@
+#!/bin/bash
+# FAKE_OPEN_PORTS is a space-separated list of ports that accept connections.
+printf 'nc %s\n' "$*" >> "$FAKE_LOG"
+port="${*: -1}"
+case " ${FAKE_OPEN_PORTS:-} " in
+  *" $port "*) exit 0 ;;
+esac
+exit 1
