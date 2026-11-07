@@ -5,7 +5,7 @@
   ],
   "casks": [
     {"token": "docker-desktop", "full_token": "docker-desktop", "old_tokens": ["docker"], "desc": "App to build and share containers", "installed": "4.40.0", "artifacts": [{"app": ["Docker.app"]}]},
-    {"token": "zen", "full_token": "zen", "old_tokens": ["zen-browser"], "desc": "Web browser", "installed": null, "artifacts": [{"uninstall": [{"quit": "app.zen-browser.zen"}]}, {"app": ["Zen.app"]}]},
+    {"token": "zen", "full_token": "zen", "old_tokens": ["zen-browser"], "desc": "Web browser, focused on privacy", "installed": null, "artifacts": [{"uninstall": [{"quit": "app.zen-browser.zen"}]}, {"app": ["Zen.app"]}]},
     {"token": "vlc", "full_token": "vlc", "old_tokens": [], "desc": "Multimedia player", "installed": null, "artifacts": [{"app": ["VLC.app"]}, {"binary": ["/x/vlc"]}]},
     {"token": "renamed-app", "full_token": "renamed-app", "old_tokens": [], "desc": "Installs under another name", "installed": null, "artifacts": [{"app": ["Original.app", {"target": "Renamed.app"}]}]},
     {"token": "cli-cask", "full_token": "cli-cask", "old_tokens": [], "desc": "has\ta tab\nand a newline", "installed": null, "artifacts": [{"binary": ["cli"]}]},

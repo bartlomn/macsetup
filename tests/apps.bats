@@ -128,3 +128,226 @@ count_items() {
   grep -q '^brew info --json=v2 --cask vlc zen$' "$FAKE_LOG"
   grep -q '^brew info --json=v2 --formula eza$' "$FAKE_LOG"
 }
+
+# --- Picker and install ---
+
+picker_brewfile() {
+  cat > "$BREWFILE" <<'LIST'
+cask "zen"
+cask "vlc" # optional
+cask "docker-desktop" # optional
+brew "eza"
+brew "kubectl"
+LIST
+}
+
+bundled() {
+  cat "$FAKE_LOG.bundle" 2>/dev/null
+}
+
+declined_file() {
+  printf '%s' "$HOME/.config/macsetup/declined"
+}
+
+@test "installed items are not offered" {
+  picker_brewfile
+  mkdir "$MACSETUP_APPS_DIR/VLC.app"
+  run apps_step "$BREWFILE" pick
+  [ "$status" -eq 0 ]
+  ! cut -f2 "$FAKE_LOG.gum-input" | grep -qx 'kubectl'
+  ! cut -f2 "$FAKE_LOG.gum-input" | grep -qx 'docker-desktop'
+  ! cut -f2 "$FAKE_LOG.gum-input" | grep -qx 'vlc'
+  [[ "$output" == *"kubectl"* ]]
+  [[ "$output" == *"docker-desktop"* ]]
+  [[ "$output" == *"vlc (outside brew)"* ]]
+  [[ "$output" != *"kubectl (outside brew)"* ]]
+}
+
+@test "tier sets the start state" {
+  picker_brewfile
+  rm -f "$BREWFILE"
+  printf 'cask "zen"\ncask "vlc" # optional\n' > "$BREWFILE"
+  run apps_step "$BREWFILE" pick
+  [ "$status" -eq 0 ]
+  [ "$(bundled)" = 'cask "zen"' ]
+}
+
+@test "preselection survives a comma in the description" {
+  printf 'cask "zen"\n' > "$BREWFILE"
+  run apps_step "$BREWFILE" pick
+  [ "$(bundled)" = 'cask "zen"' ]
+  [ ! -s "$(declined_file)" ]
+}
+
+@test "unchecked default is recorded" {
+  printf 'cask "zen"\nbrew "eza"\n' > "$BREWFILE"
+  FAKE_GUM_PICK="eza" run apps_step "$BREWFILE" pick
+  [ "$status" -eq 0 ]
+  [ "$(cat "$(declined_file)")" = "zen" ]
+  [ "$(bundled)" = 'brew "eza"' ]
+}
+
+@test "re-checked default is removed from the list" {
+  printf 'cask "zen"\nbrew "eza"\n' > "$BREWFILE"
+  declined_add zen
+  declined_add eza
+  FAKE_GUM_PICK="zen" run apps_step "$BREWFILE" pick
+  [ "$(cat "$(declined_file)")" = "eza" ]
+}
+
+@test "declined_add does not repeat a token" {
+  declined_add zen
+  declined_add zen
+  [ "$(cat "$(declined_file)")" = "zen" ]
+  run declined_list
+  [ "$output" = "zen" ]
+}
+
+@test "declined_remove leaves other tokens and handles a similar name" {
+  declined_add zen
+  declined_add zen-extra
+  declined_remove zen
+  [ "$(cat "$(declined_file)")" = "zen-extra" ]
+}
+
+@test "unchecked optional records nothing" {
+  printf 'cask "vlc" # optional\nbrew "eza"\n' > "$BREWFILE"
+  FAKE_GUM_PICK="eza" run apps_step "$BREWFILE" pick
+  [ ! -s "$(declined_file)" ]
+}
+
+@test "declined default starts unchecked" {
+  printf 'cask "zen"\nbrew "eza"\n' > "$BREWFILE"
+  declined_add zen
+  run apps_step "$BREWFILE" pick
+  [ "$(bundled)" = 'brew "eza"' ]
+  cut -f2 "$FAKE_LOG.gum-input" | grep -qx 'zen'
+}
+
+@test "nothing preselected passes no empty selection" {
+  printf 'cask "vlc" # optional\n' > "$BREWFILE"
+  run apps_step "$BREWFILE" pick
+  ! grep -q -- '--selected' "$FAKE_LOG"
+  [ ! -e "$FAKE_LOG.bundle" ]
+}
+
+@test "new Brewfile item starts by tier" {
+  printf 'brew "eza"\n' > "$BREWFILE"
+  declined_add some-old-item
+  run apps_step "$BREWFILE" pick
+  [ "$(bundled)" = 'brew "eza"' ]
+}
+
+@test "cancel records nothing" {
+  printf 'cask "zen"\n' > "$BREWFILE"
+  local code
+  for code in 130 1; do
+    FAKE_GUM_EXIT=$code apps_step "$BREWFILE" pick > /dev/null
+    ! grep -q '^brew bundle' "$FAKE_LOG"
+    [ ! -s "$(declined_file)" ]
+  done
+  run print_summary
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Skipped"* ]]
+  [[ "$output" == *"Apps"* ]]
+}
+
+@test "nothing left" {
+  printf 'cask "docker-desktop"\nbrew "kubectl"\n' > "$BREWFILE"
+  run apps_step "$BREWFILE" pick
+  [ "$status" -eq 0 ]
+  ! grep -q '^gum' "$FAKE_LOG"
+  ! grep -q '^brew bundle' "$FAKE_LOG"
+  [[ "$output" == *"docker-desktop"* ]]
+}
+
+@test "only the selection is piped" {
+  picker_brewfile
+  FAKE_GUM_PICK="vlc eza" run apps_step "$BREWFILE" pick
+  [ "$status" -eq 0 ]
+  [ "$(bundled)" = $'cask "vlc" # optional\nbrew "eza"' ]
+  grep -q '^brew bundle install --no-upgrade --file=-$' "$FAKE_LOG"
+}
+
+@test "empty selection installs nothing" {
+  printf 'cask "vlc" # optional\n' > "$BREWFILE"
+  FAKE_GUM_PICK="" run apps_step "$BREWFILE" pick
+  [ "$status" -eq 0 ]
+  ! grep -q '^brew bundle' "$FAKE_LOG"
+}
+
+@test "all mode" {
+  picker_brewfile
+  declined_add eza
+  run apps_step "$BREWFILE" all
+  [ "$status" -eq 0 ]
+  ! grep -q '^gum' "$FAKE_LOG"
+  [ "$(bundled)" = $'cask "zen"\ncask "vlc" # optional' ]
+}
+
+@test "defaults mode" {
+  picker_brewfile
+  declined_add eza
+  run apps_step "$BREWFILE" defaults
+  [ "$status" -eq 0 ]
+  ! grep -q '^gum' "$FAKE_LOG"
+  [ "$(bundled)" = 'cask "zen"' ]
+}
+
+@test "pick mode without gum falls back to defaults and says so" {
+  printf 'cask "zen"\ncask "vlc" # optional\n' > "$BREWFILE"
+  command() { [ "$2" = "gum" ] && return 1; builtin command "$@"; }
+  apps_step "$BREWFILE" pick > /dev/null 2>&1
+  unset -f command
+  [ "$(bundled)" = 'cask "zen"' ]
+  ! grep -q '^gum' "$FAKE_LOG"
+  run print_summary
+  [[ "$output" == *"gum"* ]]
+}
+
+@test "partial bundle failure reported" {
+  printf 'cask "vlc"\ncask "zen"\n' > "$BREWFILE"
+  FAKE_BUNDLE_FAIL=vlc apps_step "$BREWFILE" defaults > /dev/null 2>&1 || true
+  run print_summary
+  [ "$status" -eq 1 ]
+  [[ "$output" == *"vlc"* ]]
+  [[ "$(printf '%s\n' "$output" | sed -n '/^FAILED/,$p')" != *"zen"* ]]
+}
+
+@test "bundle failure is the return value" {
+  printf 'cask "vlc"\n' > "$BREWFILE"
+  FAKE_BUNDLE_FAIL=vlc run apps_step "$BREWFILE" defaults
+  [ "$status" -ne 0 ]
+}
+
+@test "list failure reports and offers nothing" {
+  printf 'cask "vlc"\n' > "$BREWFILE"
+  FAKE_BREW_INFO_FAIL=1 apps_step "$BREWFILE" pick > /dev/null 2>&1 || true
+  ! grep -q '^gum' "$FAKE_LOG"
+  run print_summary
+  [ "$status" -eq 1 ]
+}
+
+# These use the real gum, because the install flow rests on how it treats --selected and cancel.
+real_gum_run() {
+  [ -x /opt/homebrew/bin/gum ] || skip "gum not installed"
+  unset MACSETUP_NONINTERACTIVE
+  export FAKE_GUM_REAL=1
+  run "$REPO_ROOT/tests/in_pty.py" "source '$REPO_ROOT/lib/common.sh'; source '$REPO_ROOT/lib/apps.sh'; apps_step '$BREWFILE' pick" "$1"
+}
+
+@test "real gum: Enter keeps defaults, comma in description included" {
+  printf 'cask "zen"\nbrew "eza"\ncask "vlc" # optional\n' > "$BREWFILE"
+  real_gum_run '\r'
+  [ "$status" -eq 0 ]
+  [ "$(bundled)" = $'cask "zen"\nbrew "eza"' ]
+  [ ! -s "$(declined_file)" ]
+}
+
+@test "real gum: Esc cancels" {
+  printf 'cask "zen"\n' > "$BREWFILE"
+  real_gum_run '\x1b'
+  [ "$status" -eq 0 ]
+  [ ! -e "$FAKE_LOG.bundle" ]
+  [ ! -s "$(declined_file)" ]
+}

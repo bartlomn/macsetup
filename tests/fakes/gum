@@ -1,0 +1,26 @@
+#!/bin/bash
+# Copies real gum: --selected is comma-split and matched against labels, and values are returned.
+# FAKE_GUM_EXIT sets the exit code. FAKE_GUM_PICK (space-separated values) overrides the selection;
+# without it the preselected items come back, as when the owner just presses Enter.
+# FAKE_GUM_REAL=1 runs the real gum.
+[ "${FAKE_GUM_REAL:-}" = "1" ] && exec /opt/homebrew/bin/gum "$@"
+printf 'gum %s\n' "$*" >> "$FAKE_LOG"
+input="$(cat)"
+printf '%s\n' "$input" > "$FAKE_LOG.gum-input"
+[ -n "${FAKE_GUM_EXIT:-}" ] && exit "$FAKE_GUM_EXIT"
+if [ -n "${FAKE_GUM_PICK+set}" ]; then
+  for value in $FAKE_GUM_PICK; do printf '%s\n' "$value"; done
+  exit 0
+fi
+selected=""
+for arg in "$@"; do
+  case "$arg" in --selected=*) selected="${arg#--selected=}" ;; esac
+done
+printf '%s\n' "$input" | /usr/bin/python3 -c '
+import sys
+chosen = sys.argv[1].split(",")
+for line in sys.stdin:
+    label, _, value = line.rstrip("\n").partition("\t")
+    if label in chosen:
+        print(value)
+' "$selected"

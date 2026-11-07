@@ -81,3 +81,154 @@ classify_items() {
   done <<< "$items"
   printf '%s' "$out"
 }
+
+# gum 2.0.2, checked on a real terminal:
+#   choose --no-limit --label-delimiter=<tab> shows label<tab>value lines and returns values.
+#   --selected is comma-split and matches labels, so a label must never contain a comma. A label
+#   that fails to match is silently left unchecked, which would read as declining that item.
+#   Esc exits 1 and Ctrl-C exits 130. Enter with nothing checked exits 0 with no output.
+
+_declined_file() {
+  printf '%s/.config/macsetup/declined\n' "$HOME"
+}
+
+declined_list() {
+  cat "$(_declined_file)" 2>/dev/null
+  return 0
+}
+
+declined_add() {
+  local file
+  file="$(_declined_file)"
+  declined_list | grep -qxF -- "$1" && return 0
+  mkdir -p "$(dirname "$file")" && printf '%s\n' "$1" >> "$file"
+}
+
+declined_remove() {
+  local file tmp
+  file="$(_declined_file)"
+  [ -f "$file" ] || return 0
+  tmp="$(mktemp "$file.tmp.XXXXXX")" || return 1
+  grep -vxF -- "$1" "$file" > "$tmp"
+  mv -f "$tmp" "$file"
+}
+
+# Rows of the given state from classify_items output on stdin.
+_rows_in_state() {
+  awk -F'\t' -v state="$1" '$4 == state'
+}
+
+_print_installed() {
+  local rows="$1"
+  [ -n "$rows" ] || return 0
+  printf 'Already installed:\n'
+  printf '%s\n' "$rows" | awk -F'\t' '
+    $4 == "brew" { print "  " $2 }
+    $4 == "outside" { print "  " $2 " (outside brew)" }'
+}
+
+_picker_label() {
+  # kind, token, desc. Commas are removed because of how gum reads --selected.
+  local kind="app"
+  [ "$1" = "brew" ] && kind="cli"
+  printf '%s  %s: %s' "$kind" "$2" "${3//,/;}"
+}
+
+# Prints the chosen tokens. Returns non-zero if the owner cancelled.
+_pick_with_gum() {
+  local missing="$1" declined="$2" input="" selected="" kind token tier state desc label
+  while IFS=$'\t' read -r kind token tier state desc; do
+    label="$(_picker_label "$kind" "$token" "$desc")"
+    input+="$label"$'\t'"$token"$'\n'
+    if [ "$tier" = "default" ] && ! printf '%s\n' "$declined" | grep -qxF -- "$token"; then
+      selected+="${selected:+,}$label"
+    fi
+  done < <(printf '%s\n' "$missing" | awk -F'\t' -v OFS='\t' '{ if ($5 == "") $5 = "-"; print }')
+
+  local args=(choose --no-limit --height=20 --label-delimiter=$'\t'
+    --header="Choose what to install (space toggles, enter confirms, esc cancels)")
+  [ -n "$selected" ] && args+=(--selected="$selected")
+  printf '%s' "$input" | gum "${args[@]}"
+}
+
+_record_declined_from_pick() {
+  local missing="$1" chosen="$2" token
+  while IFS=$'\t' read -r token; do
+    if printf '%s\n' "$chosen" | grep -qxF -- "$token"; then
+      declined_remove "$token"
+    else
+      declined_add "$token"
+    fi
+  done < <(printf '%s\n' "$missing" | awk -F'\t' '$3 == "default" { print $2 }')
+}
+
+# Prints the tokens selected by an unattended mode: all, or defaults.
+_unattended_choice() {
+  local missing="$1" mode="$2" declined="$3"
+  printf '%s\n' "$missing" | awk -F'\t' -v mode="$2" '
+    mode == "all" || $3 == "default" { print $2 }' | while IFS= read -r token; do
+    printf '%s\n' "$declined" | grep -qxF -- "$token" || printf '%s\n' "$token"
+  done
+}
+
+_brewfile_lines_for() {
+  local file="$1" chosen="$2" token
+  while IFS= read -r token; do
+    [ -n "$token" ] || continue
+    grep -E "^(brew|cask) \"$token\"" "$file"
+  done <<< "$chosen"
+}
+
+# Reports which chosen tokens are still not installed after a failed brew bundle.
+_report_install_failure() {
+  local file="$1" lines="$2" tmp rows names
+  tmp="$(mktemp)" || { record_failure "Install apps"; return; }
+  printf '%s\n' "$lines" > "$tmp"
+  rows="$(classify_items "$tmp" 2>/dev/null)"
+  rm -f "$tmp"
+  names="$(printf '%s\n' "$rows" | _rows_in_state missing | cut -f2 | tr '\n' ' ')"
+  record_failure "Install apps: ${names:-see the brew output above}"
+}
+
+# apps_step <brewfile> <mode>, where mode is pick, all or defaults.
+apps_step() {
+  local file="$1" mode="$2" rows installed missing declined chosen lines
+  if ! rows="$(classify_items "$file")"; then
+    record_failure "Read the app list from Homebrew"
+    return 1
+  fi
+  installed="$(printf '%s\n' "$rows" | awk -F'\t' '$4 == "brew" || $4 == "outside"')"
+  missing="$(printf '%s\n' "$rows" | _rows_in_state missing)"
+  _print_installed "$installed"
+  if [ -z "$missing" ]; then
+    printf 'Nothing left to install.\n'
+    return 0
+  fi
+  declined="$(declined_list)"
+
+  if [ "$mode" = "pick" ] && ! command -v gum >/dev/null 2>&1; then
+    warn "gum is not available, so the picker was skipped and only defaults were considered"
+    mode="defaults"
+  fi
+  if [ "$mode" = "pick" ]; then
+    if ! chosen="$(_pick_with_gum "$missing" "$declined")"; then
+      skip_step "Apps" "picker cancelled"
+      return 0
+    fi
+    _record_declined_from_pick "$missing" "$chosen"
+  else
+    chosen="$(_unattended_choice "$missing" "$mode" "$declined")"
+  fi
+  if [ -z "$chosen" ]; then
+    printf 'Nothing selected to install.\n'
+    return 0
+  fi
+
+  lines="$(_brewfile_lines_for "$file" "$chosen")"
+  if printf '%s\n' "$lines" | brew bundle install --no-upgrade --file=-; then
+    step "Install apps" true
+    return 0
+  fi
+  _report_install_failure "$file" "$lines"
+  return 1
+}

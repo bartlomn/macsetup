@@ -1,6 +1,8 @@
 #!/bin/bash
 # FAKE_GUM_INSTALL_FAIL=1 fails installing gum. FAKE_GUM_INSTALLED=1 makes it already present.
 # FAKE_BREW_INFO is a JSON file served by info. FAKE_BREW_INFO_FAIL=1 makes info fail.
+# bundle keeps its stdin in $FAKE_LOG.bundle and marks each item installed in later info output,
+# except FAKE_BUNDLE_FAIL (one token), which also makes it exit 1.
 printf 'brew %s\n' "$*" >> "$FAKE_LOG"
 case "${1:-}" in
   shellenv)
@@ -13,7 +15,31 @@ case "${1:-}" in
       *" --formula "*) keep=formulae ;;
       *) keep=casks ;;
     esac
-    /usr/bin/python3 -c 'import json,sys; d=json.load(open(sys.argv[1])); print(json.dumps({"formulae":[],"casks":[], sys.argv[2]:d[sys.argv[2]]}))' "$FAKE_BREW_INFO" "$keep"
+    /usr/bin/python3 - "$FAKE_BREW_INFO" "$keep" "$FAKE_LOG.installed" <<'PY'
+import json, os, sys
+data = json.load(open(sys.argv[1]))
+done = open(sys.argv[3]).read().split() if os.path.exists(sys.argv[3]) else []
+for item in data["formulae"]:
+    if item["name"] in done:
+        item["installed"] = [{"version": "1"}]
+for item in data["casks"]:
+    if item["token"] in done:
+        item["installed"] = "1"
+print(json.dumps({"formulae": [], "casks": [], sys.argv[2]: data[sys.argv[2]]}))
+PY
+    ;;
+  bundle)
+    failed=0
+    while IFS= read -r line; do
+      printf '%s\n' "$line" >> "$FAKE_LOG.bundle"
+      token="$(printf '%s\n' "$line" | cut -d'"' -f2)"
+      if [ "$token" = "${FAKE_BUNDLE_FAIL:-}" ]; then
+        failed=1
+      else
+        printf '%s\n' "$token" >> "$FAKE_LOG.installed"
+      fi
+    done
+    exit "$failed"
     ;;
   list)
     [ "${2:-}" = "gum" ] && [ "${FAKE_GUM_INSTALLED:-}" != "1" ] && exit 1

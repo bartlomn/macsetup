@@ -1,9 +1,13 @@
 #!/usr/bin/python3
-"""Runs a bash snippet on a real pty and exits with its status. Gives up after 20 seconds."""
+"""Runs a bash snippet on a real pty and exits with its status. Gives up after 20 seconds.
+
+An optional second argument is typed after one second, with \\r and \\x escapes.
+"""
 import os
 import pty
 import signal
 import sys
+import time
 
 pid, fd = pty.fork()
 if pid == 0:
@@ -11,6 +15,9 @@ if pid == 0:
 
 signal.signal(signal.SIGALRM, lambda *_: (os.kill(pid, signal.SIGKILL), sys.exit(124)))
 signal.alarm(20)
+if len(sys.argv) > 2:
+    time.sleep(1)
+    os.write(fd, sys.argv[2].encode().decode("unicode_escape").encode())
 try:
     while os.read(fd, 4096):
         pass
