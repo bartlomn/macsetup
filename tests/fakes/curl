@@ -4,6 +4,7 @@
 printf 'curl %s\n' "$*" >> "$FAKE_LOG"
 case "$*" in
   *Homebrew/install*) FAKE_CURL_BODY='exec brew-installer' ;;
+  *ohmyzsh/ohmyzsh*) FAKE_CURL_BODY='exec omz-installer "$@"' ;;
 esac
 out=""
 while [ $# -gt 0 ]; do

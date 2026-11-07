@@ -1,0 +1,12 @@
+#!/bin/bash
+# Stands in for Oh My Zsh's installer. FAKE_OMZ_FAIL=1 fails after leaving a partial folder.
+printf 'omz-installer %s\n' "$*" >> "$FAKE_LOG"
+[ -f "$HOME/.zshrc" ] && printf 'omz-installer saw .zshrc\n' >> "$FAKE_LOG"
+if [ "${FAKE_OMZ_FAIL:-}" = "1" ]; then
+  mkdir -p "$HOME/.oh-my-zsh"
+  exit 1
+fi
+mkdir -p "$HOME/.oh-my-zsh/custom"
+touch "$HOME/.oh-my-zsh/oh-my-zsh.sh"
+git init -q "$HOME/.oh-my-zsh"
+git -C "$HOME/.oh-my-zsh" -c user.name=t -c user.email=t@t commit -q --allow-empty -m first
