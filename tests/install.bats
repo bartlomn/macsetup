@@ -25,7 +25,7 @@ setup() {
 make_tree() {
   local dir="$1"
   mkdir -p "$dir"
-  cp -R "$REPO_ROOT/lib" "$REPO_ROOT/zsh" "$REPO_ROOT/p10k.zsh" "$REPO_ROOT/install.sh" "$REPO_ROOT/macos.sh" "$dir/"
+  cp -R "$REPO_ROOT/lib" "$REPO_ROOT/ssh" "$REPO_ROOT/zsh" "$REPO_ROOT/p10k.zsh" "$REPO_ROOT/install.sh" "$REPO_ROOT/macos.sh" "$dir/"
   printf 'cask "zen"\ncask "vlc" # optional\nbrew "eza"\n' > "$dir/Brewfile"
   git init -q -b main "$dir"
   git -C "$dir" add .
@@ -49,7 +49,7 @@ bundled() {
   make_tree "$CLONE"
   run_install
   [ "$status" -eq 0 ]
-  ! grep -q '^gum' "$FAKE_LOG"
+  ! grep -q '^gum' "$FAKE_LOG" || false
   [ "$(bundled)" = $'cask "zen"\nbrew "eza"' ]
 }
 
@@ -57,7 +57,7 @@ bundled() {
   make_tree "$CLONE"
   run_install --all
   [ "$status" -eq 0 ]
-  ! grep -q '^gum' "$FAKE_LOG"
+  ! grep -q '^gum' "$FAKE_LOG" || false
   [ "$(bundled)" = $'cask "zen"\ncask "vlc" # optional\nbrew "eza"' ]
 }
 
@@ -74,7 +74,7 @@ bundled() {
   export MACSETUP_NO_PICKER=1
   run_install_on_terminal
   [ "$status" -eq 0 ]
-  ! grep -q '^gum' "$FAKE_LOG"
+  ! grep -q '^gum' "$FAKE_LOG" || false
   [ "$(bundled)" = $'cask "zen"\nbrew "eza"' ]
 }
 
@@ -152,7 +152,7 @@ bundled() {
   make_tree "$CLONE"
   MACSETUP_NO_SUDO=1 run_install
   [ "$status" -eq 2 ]
-  ! grep -q '^sudo' "$FAKE_LOG"
+  ! grep -q '^sudo' "$FAKE_LOG" || false
   [[ "$output" == *"Skipped"* ]]
 }
 
@@ -160,7 +160,7 @@ bundled() {
   make_tree "$CLONE"
   FAKE_SUDO_FAIL=1 run_install
   [ "$status" -eq 2 ]
-  ! grep -q '^pmset -' "$FAKE_LOG"
+  ! grep -q '^pmset -' "$FAKE_LOG" || false
   [[ "$output" == *"Skipped"* ]]
 }
 
@@ -190,11 +190,11 @@ bundled() {
   run_install --all
   [ "$status" -eq 0 ]
   [ ! -e "$FAKE_LOG.bundle" ]
-  ! grep -q '^defaults write' "$FAKE_LOG"
-  ! grep -q '^killall' "$FAKE_LOG"
-  ! grep -q '^pmset -[ca]' "$FAKE_LOG"
-  ! grep -q '^omz-installer' "$FAKE_LOG"
-  ! grep -q '^curl' "$FAKE_LOG"
+  ! grep -q '^defaults write' "$FAKE_LOG" || false
+  ! grep -q '^killall' "$FAKE_LOG" || false
+  ! grep -q '^pmset -[ca]' "$FAKE_LOG" || false
+  ! grep -q '^omz-installer' "$FAKE_LOG" || false
+  ! grep -q '^curl' "$FAKE_LOG" || false
   [ -z "$(ls -a "$HOME" | grep 'macsetup-bak')" ]
 }
 

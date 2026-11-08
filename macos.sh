@@ -74,14 +74,6 @@ _pmset_value() {
     active && $1 == key { print $2; exit }'
 }
 
-_run_sudo() {
-  if is_interactive; then
-    sudo "$@"
-  else
-    sudo -n "$@"
-  fi
-}
-
 _set_power() {
   local label="$1"
   shift

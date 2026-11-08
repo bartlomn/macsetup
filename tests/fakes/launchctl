@@ -1,0 +1,6 @@
+#!/bin/bash
+# FAKE_LAUNCHCTL_FAIL=1 fails every call. A bootstrap that succeeds opens port 22.
+printf 'launchctl %s\n' "$*" >> "$FAKE_LOG"
+[ "${FAKE_LAUNCHCTL_FAIL:-}" = "1" ] && exit 1
+[ "$1" = "bootstrap" ] && printf '22\n' >> "$FAKE_LOG.ports"
+exit 0

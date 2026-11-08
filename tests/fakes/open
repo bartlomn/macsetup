@@ -1,0 +1,2 @@
+#!/bin/bash
+printf 'open %s\n' "$*" >> "$FAKE_LOG"

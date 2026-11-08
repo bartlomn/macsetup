@@ -1,7 +1,23 @@
 #!/bin/bash
-# FAKE_SUDO_FAIL=1 refuses everything. Otherwise drops sudo's flags and runs the command.
+# FAKE_SUDO_FAIL=1 refuses everything. Otherwise drops sudo's flags and runs the command as the
+# current user. As a guard, it refuses real system commands and anything under /etc.
 printf 'sudo %s\n' "$*" >> "$FAKE_LOG"
 [ "${FAKE_SUDO_FAIL:-}" = "1" ] && exit 1
 while [ "${1#-}" != "${1:-}" ]; do shift; done
 [ $# -eq 0 ] && exit 0
+case "$1" in
+  /usr/bin/install | mkdir | rm | "$FAKES_DIR"/* | */tests/fakes/*) ;;
+  /*)
+    printf 'fake sudo: refusing real command %s\n' "$1" >&2
+    exit 97
+    ;;
+esac
+for arg in "$@"; do
+  case "$arg" in
+    /etc/*)
+      printf 'fake sudo: refusing system path %s\n' "$arg" >&2
+      exit 97
+      ;;
+  esac
+done
 exec "$@"

@@ -1,0 +1,12 @@
+#!/bin/bash
+# -t fails with FAKE_SSHD_T_FAIL=1. -T prints the effective password settings: like OpenSSH, the
+# first value read wins, reading the drop-ins in name order. FAKE_SSHD_T_FAIL=1 fails -T too.
+printf 'sshd %s\n' "$*" >> "$FAKE_LOG"
+[ "${FAKE_SSHD_T_FAIL:-}" = "1" ] && exit 1
+if [ "$1" = "-T" ]; then
+  for key in PasswordAuthentication KbdInteractiveAuthentication; do
+    value="$(cat "$MACSETUP_SSH_DIR"/sshd_config.d/* 2>/dev/null | awk -v k="$key" '$1 == k { print $2; exit }')"
+    printf '%s %s\n' "$(printf '%s' "$key" | tr '[:upper:]' '[:lower:]')" "${value:-yes}"
+  done
+fi
+exit 0

@@ -98,6 +98,15 @@ port_open() {
   nc -z -G 2 localhost "$1" >/dev/null 2>&1
 }
 
+# Runs a command as root, never prompting when there is no terminal to answer.
+_run_sudo() {
+  if is_interactive; then
+    sudo "$@"
+  else
+    sudo -n "$@"
+  fi
+}
+
 is_interactive() {
   [ -z "${MACSETUP_NONINTERACTIVE:-}" ] && [ -t 0 ] && [ -t 1 ]
 }

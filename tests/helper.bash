@@ -11,4 +11,12 @@ setup_sandbox() {
   export FAKE_LOG="$BATS_TEST_TMPDIR/fake.log"
   : > "$FAKE_LOG"
   export MACSETUP_NONINTERACTIVE=1
+  # System paths and commands point into the sandbox, so no test reaches the real /etc/ssh.
+  export MACSETUP_SSH_DIR="$BATS_TEST_TMPDIR/etc_ssh"
+  mkdir -p "$MACSETUP_SSH_DIR/sshd_config.d"
+  export MACSETUP_SSHD="$FAKES_DIR/sshd"
+  export MACSETUP_SSH_KEYGEN="$FAKES_DIR/ssh-keygen"
+  export MACSETUP_LAUNCHCTL="$FAKES_DIR/launchctl"
+  export MACSETUP_SYSTEMSETUP="$FAKES_DIR/systemsetup"
+  export MACSETUP_PORT_WAIT=1
 }

@@ -1,0 +1,6 @@
+#!/bin/bash
+# FAKE_SYSTEMSETUP_FAIL=1 fails, as it does without Full Disk Access. Success opens port 22.
+printf 'systemsetup %s\n' "$*" >> "$FAKE_LOG"
+[ "${FAKE_SYSTEMSETUP_FAIL:-}" = "1" ] && exit 1
+printf '22\n' >> "$FAKE_LOG.ports"
+exit 0

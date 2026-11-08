@@ -1,0 +1,12 @@
+#!/bin/bash
+# Only -A is faked: it records whether the owner's key was already authorised, then creates a host
+# key in $MACSETUP_SSH_DIR. FAKE_SSH_KEYGEN_FAIL=1 fails it.
+if [ "$1" = "-A" ]; then
+  state=absent
+  grep -q 'ssh-ed25519' "$HOME/.ssh/authorized_keys" 2>/dev/null && state=present
+  printf 'ssh-keygen -A key=%s\n' "$state" >> "$FAKE_LOG"
+  [ "${FAKE_SSH_KEYGEN_FAIL:-}" = "1" ] && exit 1
+  : > "$MACSETUP_SSH_DIR/ssh_host_ed25519_key"
+  exit 0
+fi
+exec /usr/bin/ssh-keygen "$@"
