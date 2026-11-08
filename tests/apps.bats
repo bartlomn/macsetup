@@ -24,7 +24,7 @@ count_items() {
 @test "Brewfile matches the spec" {
   [ "$(count_items cask default)" -eq 8 ]
   [ "$(count_items cask optional)" -eq 15 ]
-  [ "$(count_items brew default)" -eq 20 ]
+  [ "$(count_items brew default)" -eq 19 ]
   [ "$(count_items brew optional)" -eq 9 ]
 }
 

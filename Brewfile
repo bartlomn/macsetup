@@ -45,7 +45,6 @@ brew "tmux"
 brew "glow"
 brew "ncdu"
 brew "rename"
-brew "z"
 
 brew "argocd" # optional
 brew "opentofu" # optional
