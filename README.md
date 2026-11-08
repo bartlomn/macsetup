@@ -41,6 +41,23 @@ If `p10k configure` offers to edit `~/.zshrc`, decline, because the prompt is al
 
 Icons work in kitty as it is. Terminal.app needs its font set to `MesloLGS NF` by hand.
 
+### SSH
+
+The run adds the public key in `ssh/authorized_key.pub` to `~/.ssh/authorized_keys`, turns off
+password and keyboard-interactive login with `/etc/ssh/sshd_config.d/000-macsetup.conf`, and turns
+on Remote Login. The setting is checked with `sshd -t` and `sshd -T` before anything is turned on,
+and put back as it was if a check fails. Once it is on, only that key can log in, so losing it means
+going to the Mac in person.
+
+Tested on an M1 Mac mini with macOS 27.2:
+
+- The script turned Remote Login on itself, with no visit to System Settings.
+- Key login works, and the Mac offers no login method but `publickey`.
+- With FileVault off, SSH is back about 15 seconds after a restart, before anyone logs in.
+- A run over SSH with no terminal installs nothing optional and doesn't prompt.
+- `<name>.local` didn't resolve on the home network, so connect by IP address, ideally one reserved
+  for the Mac on the router.
+
 ### Changing the setup
 
 `~/.macsetup` is a working copy, and `~/.p10k.zsh` links into it, so edits show up in its
