@@ -24,7 +24,7 @@ count_items() {
 @test "Brewfile matches the spec" {
   [ "$(count_items cask default)" -eq 8 ]
   [ "$(count_items cask optional)" -eq 15 ]
-  [ "$(count_items brew default)" -eq 19 ]
+  [ "$(count_items brew default)" -eq 18 ]
   [ "$(count_items brew optional)" -eq 9 ]
 }
 
@@ -350,4 +350,12 @@ real_gum_run() {
   [ "$status" -eq 0 ]
   [ ! -e "$FAKE_LOG.bundle" ]
   [ ! -s "$(declined_file)" ]
+}
+
+@test "real gum: x unticks the highlighted default" {
+  printf 'cask "zen"\nbrew "eza"\n' > "$BREWFILE"
+  real_gum_run 'x\r'
+  [ "$status" -eq 0 ]
+  [ "$(bundled)" = 'brew "eza"' ]
+  grep -qxF zen "$(declined_file)"
 }

@@ -186,7 +186,7 @@ Optional apps: `alfred`, `balenaetcher`, `evernote`, `vlc`, `spotify`, `meetily`
 it).
 
 Default CLI tools: `aws-cdk`, `awscli`, `eza`, `git`, `fnm`, `helm`, `k9s`, `kubectl`, `direnv`,
-`gh`, `git-lfs`, `go-task`, `kubectx`, `tfenv`, `yq`, `tmux`, `glow`, `ncdu`, `rename` (`z` dropped by the owner, as nothing loaded it).
+`gh`, `git-lfs`, `kubectx`, `tfenv`, `yq`, `tmux`, `glow`, `ncdu`, `rename` (`z` and `go-task` dropped by the owner).
 
 Optional CLI tools: `argocd`, `opentofu`, `nmap`, `iperf`, `ffmpeg`, `poppler`, `tesseract-lang`,
 `zbar`, `cmatrix`.

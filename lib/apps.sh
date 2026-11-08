@@ -88,6 +88,7 @@ classify_items() {
 #   --selected is comma-split and matches labels, so a label must never contain a comma. A label
 #   that fails to match is silently left unchecked, which would read as declining that item.
 #   Esc exits 1 and Ctrl-C exits 130. Enter with nothing checked exits 0 with no output.
+#   x and tab toggle the highlighted line; space does nothing.
 
 _declined_file() {
   printf '%s/.config/macsetup/declined\n' "$HOME"
@@ -147,7 +148,7 @@ _pick_with_gum() {
   done < <(printf '%s\n' "$missing" | awk -F'\t' -v OFS='\t' '{ if ($5 == "") $5 = "-"; print }')
 
   local args=(choose --no-limit --height=20 --label-delimiter=$'\t'
-    --header="Choose what to install (space toggles, enter confirms, esc cancels)")
+    --header="Choose what to install (x or tab ticks and unticks, enter confirms, esc installs nothing)")
   [ -n "$selected" ] && args+=(--selected="$selected")
   printf '%s' "$input" | gum "${args[@]}"
 }
