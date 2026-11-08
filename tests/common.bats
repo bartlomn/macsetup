@@ -151,3 +151,15 @@ in_pty() {
   run in_pty "MACSETUP_NONINTERACTIVE=1; source '$REPO_ROOT/lib/common.sh'; is_interactive"
   [ "$status" -ne 0 ]
 }
+
+@test "fake sudo refuses real system commands" {
+  run sudo /usr/bin/true
+  [ "$status" -eq 97 ]
+}
+
+@test "_run_sudo can prompt inside a command substitution on a terminal" {
+  unset MACSETUP_NONINTERACTIVE
+  FAKE_SUDO_N_FAIL=1 run "$REPO_ROOT/tests/in_pty.py" \
+    "source '$REPO_ROOT/lib/common.sh'; out=\"\$(_run_sudo printf ok)\"; [ \"\$out\" = ok ]"
+  [ "$status" -eq 0 ]
+}

@@ -1,8 +1,10 @@
 #!/bin/bash
-# FAKE_SUDO_FAIL=1 refuses everything. Otherwise drops sudo's flags and runs the command as the
-# current user. As a guard, it refuses real system commands and anything under /etc.
+# FAKE_SUDO_FAIL=1 refuses everything; FAKE_SUDO_N_FAIL=1 refuses only sudo -n, as when the
+# timestamp has expired. Otherwise drops sudo's flags and runs the command as the current user. As
+# a guard, it refuses real system commands and anything under /etc.
 printf 'sudo %s\n' "$*" >> "$FAKE_LOG"
 [ "${FAKE_SUDO_FAIL:-}" = "1" ] && exit 1
+[ "${FAKE_SUDO_N_FAIL:-}" = "1" ] && [ "$1" = "-n" ] && exit 1
 while [ "${1#-}" != "${1:-}" ]; do shift; done
 [ $# -eq 0 ] && exit 0
 case "$1" in

@@ -1,7 +1,8 @@
 # Shared bats helpers. Nothing here may touch the real HOME.
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-FAKES_DIR="$REPO_ROOT/tests/fakes"
+# Exported, as the fake sudo reads it to tell fakes from real system commands.
+export FAKES_DIR="$REPO_ROOT/tests/fakes"
 
 # Gives a test a temp HOME, fake commands first on PATH, and a log of fake calls.
 setup_sandbox() {

@@ -98,9 +98,10 @@ port_open() {
   nc -z -G 2 localhost "$1" >/dev/null 2>&1
 }
 
-# Runs a command as root, never prompting when there is no terminal to answer.
+# Runs a command as root, never prompting when there is no terminal to answer. Checks stdin only,
+# as sudo asks on the terminal and stdout is a pipe inside a command substitution.
 _run_sudo() {
-  if is_interactive; then
+  if [ -z "${MACSETUP_NONINTERACTIVE:-}" ] && [ -t 0 ]; then
     sudo "$@"
   else
     sudo -n "$@"
