@@ -336,7 +336,8 @@ Open points to test:
   manual step in the summary. An open port is the limit of what the script can check, so its summary
   says "port open, not tested from another machine" rather than claiming Screen Sharing works.
 - On by default, because the mini stays on the home network.
-- Limit access to the owner's account. Never expose it to the internet.
+- Limit access to the Mac's administrators (the `admin` group), never all users. The owner chose
+  this over their account alone, as they may add an account later. Never expose it to the internet.
 - If the mini runs without a display, check the screen is usable over Screen Sharing.
 - It logs in with the macOS password, not the SSH key, so key-only SSH does not affect it.
 
@@ -354,7 +355,7 @@ Open points to test:
 - SSH acceptance, from this Mac: key login succeeds, and password and keyboard-interactive login are
   both rejected.
 - Screen Sharing acceptance, from this Mac: a real graphical session where the owner confirms both
-  viewing and control work, and access is limited to the owner's account. Stage 3 is not done until
+  viewing and control work, and access is limited to administrators. Stage 3 is not done until
   the owner has confirmed this.
 - Decline `fnm` and `eza` (or remove them), and confirm a new shell starts with no errors and `ls`
   still works.

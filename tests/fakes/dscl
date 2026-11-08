@@ -1,0 +1,33 @@
+#!/bin/bash
+# Answers the reads the Screen Sharing step makes. FAKE_SS_ACCESS sets who may connect:
+# admin (default, Administrators only), user (another account added), group (another group
+# added), all (no access group, so all users), error (unreadable).
+printf 'dscl %s\n' "$*" >> "$FAKE_LOG"
+admin_guid="ABCDEFAB-CDEF-ABCD-EFAB-CDEF00000050"
+case "$*" in
+  *"/Groups/admin GeneratedUID"*)
+    printf 'GeneratedUID: %s\n' "$admin_guid"
+    exit 0
+    ;;
+  *"/Groups/com.apple.access_screensharing"*) ;;
+  *) exit 1 ;;
+esac
+case "${FAKE_SS_ACCESS:-admin}" in
+  admin)
+    printf 'No such key: GroupMembership\nNo such key: GroupMembers\nNestedGroups: %s\n' "$admin_guid"
+    ;;
+  user)
+    printf 'GroupMembership: guest\nGroupMembers: 11111111-2222-3333-4444-555555555555\nNestedGroups: %s\n' "$admin_guid"
+    ;;
+  group)
+    printf 'No such key: GroupMembership\nNo such key: GroupMembers\nNestedGroups: %s\n ABCDEFAB-CDEF-ABCD-EFAB-CDEF00000014\n' "$admin_guid"
+    ;;
+  all)
+    printf '<dscl_cmd> DS Error: -14136 (eDSRecordNotFound)\n' >&2
+    exit 56
+    ;;
+  *)
+    printf '<dscl_cmd> DS Error: -14009 (eDSUnknownNodeName)\n' >&2
+    exit 1
+    ;;
+esac

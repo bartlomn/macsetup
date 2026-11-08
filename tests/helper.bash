@@ -18,5 +18,6 @@ setup_sandbox() {
   export MACSETUP_SSH_KEYGEN="$FAKES_DIR/ssh-keygen"
   export MACSETUP_LAUNCHCTL="$FAKES_DIR/launchctl"
   export MACSETUP_SYSTEMSETUP="$FAKES_DIR/systemsetup"
+  export MACSETUP_DSCL="$FAKES_DIR/dscl"
   export MACSETUP_PORT_WAIT=1
 }

@@ -9,6 +9,8 @@ setup() {
   export MACSETUP_APPS_DIR="$BATS_TEST_TMPDIR/Applications"
   export MACSETUP_FONTS_DIR="$BATS_TEST_TMPDIR/Fonts"
   export MACSETUP_SOCKETFILTERFW="$FAKES_DIR/socketfilterfw"
+  # Screen Sharing can only be switched on by hand, so these runs start with it already on.
+  export FAKE_OPEN_PORTS=5900
   export GIT_AUTHOR_NAME=t GIT_AUTHOR_EMAIL=t@t GIT_COMMITTER_NAME=t GIT_COMMITTER_EMAIL=t@t
   mkdir -p "$MACSETUP_APPS_DIR" "$MACSETUP_FONTS_DIR" "$HOME/Library" "$HOME/brew/bin"
   cp "$FAKES_DIR/brew" "$HOME/brew/bin/brew"

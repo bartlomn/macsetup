@@ -58,6 +58,19 @@ Tested on an M1 Mac mini with macOS 27.2:
 - `<name>.local` didn't resolve on the home network, so connect by IP address, ideally one reserved
   for the Mac on the router.
 
+### Screen Sharing
+
+Turn it on once by hand in System Settings > General > Sharing. The run checks that port 5900 is
+open and that only Administrators may connect, and lists anything else under "Do by hand". It
+reports "port open, not tested from another machine", as an open port is all it can check.
+
+The script doesn't turn Screen Sharing on itself. On macOS 27.2, starting it with `launchctl` opens
+the port and accepts the password, but without the permissions to show the screen or take control,
+which only the switch in System Settings grants. Viewers then get "Screen Sharing is not permitted".
+If that happens, switch it off and on again in System Settings.
+
+Connect with `vnc://<IP address>` using the Mac's account password. It doesn't use the SSH key.
+
 ### Changing the setup
 
 `~/.macsetup` is a working copy, and `~/.p10k.zsh` links into it, so edits show up in its
