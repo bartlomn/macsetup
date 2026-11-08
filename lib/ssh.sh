@@ -43,7 +43,8 @@ ssh_create_hostkeys() {
   _run_sudo "${MACSETUP_SSH_KEYGEN:-/usr/bin/ssh-keygen}" -A
 }
 
-# sshd -t must pass, and sshd -T must show both password settings off.
+# sshd -t must pass, and sshd -T must show both password settings off. Names are matched in any
+# case: older OpenSSH prints them in lower case, macOS 27 prints them as written in the config.
 _ssh_config_valid() {
   local sshd="${MACSETUP_SSHD:-/usr/sbin/sshd}" effective
   if ! _run_sudo "$sshd" -t; then
@@ -51,8 +52,8 @@ _ssh_config_valid() {
     return 1
   fi
   effective="$(_run_sudo "$sshd" -T)" || return 1
-  if ! printf '%s\n' "$effective" | grep -qx 'passwordauthentication no' ||
-    ! printf '%s\n' "$effective" | grep -qx 'kbdinteractiveauthentication no'; then
+  if ! printf '%s\n' "$effective" | grep -qix 'passwordauthentication no' ||
+    ! printf '%s\n' "$effective" | grep -qix 'kbdinteractiveauthentication no'; then
     printf 'sshd -T still allows password or keyboard-interactive login\n' >&2
     return 1
   fi

@@ -193,3 +193,17 @@ called() {
   ! called launchctl || false
   [[ "$output" == *"Do by hand:"*"Turn on Remote Login"* ]]
 }
+
+@test "sshd -T printing names in mixed case, as on macOS 27, is accepted" {
+  FAKE_SSHD_T_MIXED_CASE=1 run_ssh
+  [ "$status" -eq 0 ]
+  cmp "$DROPIN" "$REPO_ROOT/ssh/000-macsetup.conf"
+  [[ "$output" == *"Remote Login on, port 22 open"* ]]
+}
+
+@test "mixed case still catches password login left on" {
+  printf 'PasswordAuthentication yes\n' > "$MACSETUP_SSH_DIR/sshd_config.d/0-other.conf"
+  FAKE_SSHD_T_MIXED_CASE=1 run_ssh
+  [ "$status" -eq 1 ]
+  [ ! -e "$DROPIN" ]
+}
