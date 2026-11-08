@@ -55,11 +55,11 @@ wrote() {
   run_macos
   [ "$status" -eq 0 ]
   [ "$(writes)" -eq 0 ]
-  ! grep -q '^killall' "$FAKE_LOG"
-  ! grep -q '^pmset' "$FAKE_LOG"
-  ! grep -q '^chflags' "$FAKE_LOG"
-  ! grep -q '^osascript' "$FAKE_LOG"
-  ! grep -q '^sudo' "$FAKE_LOG"
+  ! grep -q '^killall' "$FAKE_LOG" || false
+  ! grep -q '^pmset' "$FAKE_LOG" || false
+  ! grep -q '^chflags' "$FAKE_LOG" || false
+  ! grep -q '^osascript' "$FAKE_LOG" || false
+  ! grep -q '^sudo' "$FAKE_LOG" || false
 }
 
 @test "only Dock change restarts only Dock" {
@@ -70,7 +70,7 @@ wrote() {
   run_macos
   [ "$(writes)" -eq 1 ]
   grep -q '^killall Dock' "$FAKE_LOG"
-  ! grep -q '^killall Finder' "$FAKE_LOG"
+  ! grep -q '^killall Finder' "$FAKE_LOG" || false
 }
 
 @test "bool compare" {
@@ -78,13 +78,13 @@ wrote() {
   : > "$FAKE_LOG"
   grep -q '^com.apple.dock|autohide|1$' "$FAKE_LOG.defaults"
   run_macos
-  ! grep -q 'autohide' "$FAKE_LOG"
+  ! grep -q 'autohide' "$FAKE_LOG" || false
 }
 
 @test "extensions domain" {
   run_macos
   wrote "NSGlobalDomain AppleShowAllExtensions -bool true"
-  ! grep -q 'com.apple.finder AppleShowAllExtensions' "$FAKE_LOG"
+  ! grep -q 'com.apple.finder AppleShowAllExtensions' "$FAKE_LOG" || false
 }
 
 @test "a failed write is reported and the rest still run" {
@@ -98,13 +98,13 @@ wrote() {
   FAKE_SUDO_FAIL=1 run_macos
   [ "$status" -eq 1 ]
   [ "$(writes)" -eq 23 ]
-  ! grep -q '^pmset -' "$FAKE_LOG"
+  ! grep -q '^pmset -' "$FAKE_LOG" || false
 }
 
 @test "MACSETUP_NO_SUDO skips power settings without trying sudo" {
   MACSETUP_NO_SUDO=1 run_macos
   [ "$status" -eq 2 ]
-  ! grep -q '^sudo' "$FAKE_LOG"
+  ! grep -q '^sudo' "$FAKE_LOG" || false
   [[ "$output" == *"Skipped"* ]]
   [[ "$output" == *"Do by hand"* ]]
 }
@@ -113,25 +113,25 @@ wrote() {
   run_macos
   [[ "$output" == *"FileVault is Off"* ]]
   [[ "$output" == *"Firewall is enabled"* ]]
-  ! grep -q '^fdesetup enable' "$FAKE_LOG"
-  ! grep -q 'setglobalstate' "$FAKE_LOG"
+  ! grep -q '^fdesetup enable' "$FAKE_LOG" || false
+  ! grep -q 'setglobalstate' "$FAKE_LOG" || false
 }
 
 @test "autorestart unsupported" {
   FAKE_PMSET_NO_AUTORESTART=1 run_macos
   [ "$status" -eq 0 ]
-  ! grep -q 'autorestart 1' "$FAKE_LOG"
+  ! grep -q 'autorestart 1' "$FAKE_LOG" || false
   [[ "$output" == *"autorestart"* ]]
 }
 
 @test "battery values are not read as the power adapter's" {
   printf 'sleep 0\nwomp 1\nautorestart 1\n' > "$FAKE_LOG.pmset"
   run_macos
-  ! grep -q '^pmset -' "$FAKE_LOG"
+  ! grep -q '^pmset -' "$FAKE_LOG" || false
 }
 
 @test "settings without power source headings are read" {
   printf 'sleep 0\nwomp 1\nautorestart 1\n' > "$FAKE_LOG.pmset"
   FAKE_PMSET_NO_HEADINGS=1 run_macos
-  ! grep -q '^pmset -' "$FAKE_LOG"
+  ! grep -q '^pmset -' "$FAKE_LOG" || false
 }

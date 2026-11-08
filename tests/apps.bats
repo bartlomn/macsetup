@@ -154,9 +154,9 @@ declined_file() {
   mkdir "$MACSETUP_APPS_DIR/VLC.app"
   run apps_step "$BREWFILE" pick
   [ "$status" -eq 0 ]
-  ! cut -f2 "$FAKE_LOG.gum-input" | grep -qx 'kubectl'
-  ! cut -f2 "$FAKE_LOG.gum-input" | grep -qx 'docker-desktop'
-  ! cut -f2 "$FAKE_LOG.gum-input" | grep -qx 'vlc'
+  ! cut -f2 "$FAKE_LOG.gum-input" | grep -qx 'kubectl' || false
+  ! cut -f2 "$FAKE_LOG.gum-input" | grep -qx 'docker-desktop' || false
+  ! cut -f2 "$FAKE_LOG.gum-input" | grep -qx 'vlc' || false
   [[ "$output" == *"kubectl"* ]]
   [[ "$output" == *"docker-desktop"* ]]
   [[ "$output" == *"vlc (outside brew)"* ]]
@@ -227,7 +227,7 @@ declined_file() {
 @test "nothing preselected passes no empty selection" {
   printf 'cask "vlc" # optional\n' > "$BREWFILE"
   run apps_step "$BREWFILE" pick
-  ! grep -q -- '--selected' "$FAKE_LOG"
+  ! grep -q -- '--selected' "$FAKE_LOG" || false
   [ ! -e "$FAKE_LOG.bundle" ]
 }
 
@@ -243,7 +243,7 @@ declined_file() {
   local code
   for code in 130 1; do
     FAKE_GUM_EXIT=$code apps_step "$BREWFILE" pick > /dev/null
-    ! grep -q '^brew bundle' "$FAKE_LOG"
+    ! grep -q '^brew bundle' "$FAKE_LOG" || false
     [ ! -s "$(declined_file)" ]
   done
   run print_summary
@@ -256,8 +256,8 @@ declined_file() {
   printf 'cask "docker-desktop"\nbrew "kubectl"\n' > "$BREWFILE"
   run apps_step "$BREWFILE" pick
   [ "$status" -eq 0 ]
-  ! grep -q '^gum' "$FAKE_LOG"
-  ! grep -q '^brew bundle' "$FAKE_LOG"
+  ! grep -q '^gum' "$FAKE_LOG" || false
+  ! grep -q '^brew bundle' "$FAKE_LOG" || false
   [[ "$output" == *"docker-desktop"* ]]
 }
 
@@ -273,7 +273,7 @@ declined_file() {
   printf 'cask "vlc" # optional\n' > "$BREWFILE"
   FAKE_GUM_PICK="" run apps_step "$BREWFILE" pick
   [ "$status" -eq 0 ]
-  ! grep -q '^brew bundle' "$FAKE_LOG"
+  ! grep -q '^brew bundle' "$FAKE_LOG" || false
 }
 
 @test "all mode" {
@@ -281,7 +281,7 @@ declined_file() {
   declined_add eza
   run apps_step "$BREWFILE" all
   [ "$status" -eq 0 ]
-  ! grep -q '^gum' "$FAKE_LOG"
+  ! grep -q '^gum' "$FAKE_LOG" || false
   [ "$(bundled)" = $'cask "zen"\ncask "vlc" # optional' ]
 }
 
@@ -290,7 +290,7 @@ declined_file() {
   declined_add eza
   run apps_step "$BREWFILE" defaults
   [ "$status" -eq 0 ]
-  ! grep -q '^gum' "$FAKE_LOG"
+  ! grep -q '^gum' "$FAKE_LOG" || false
   [ "$(bundled)" = 'cask "zen"' ]
 }
 
@@ -300,7 +300,7 @@ declined_file() {
   apps_step "$BREWFILE" pick > /dev/null 2>&1
   unset -f command
   [ "$(bundled)" = 'cask "zen"' ]
-  ! grep -q '^gum' "$FAKE_LOG"
+  ! grep -q '^gum' "$FAKE_LOG" || false
   run print_summary
   [[ "$output" == *"gum"* ]]
 }
@@ -323,7 +323,7 @@ declined_file() {
 @test "list failure reports and offers nothing" {
   printf 'cask "vlc"\n' > "$BREWFILE"
   FAKE_BREW_INFO_FAIL=1 apps_step "$BREWFILE" pick > /dev/null 2>&1 || true
-  ! grep -q '^gum' "$FAKE_LOG"
+  ! grep -q '^gum' "$FAKE_LOG" || false
   run print_summary
   [ "$status" -eq 1 ]
 }

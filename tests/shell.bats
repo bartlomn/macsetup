@@ -104,7 +104,7 @@ backups_of() {
 @test "omz valid skipped" {
   valid_omz
   shell_install_omz
-  ! grep -q '^omz-installer' "$FAKE_LOG"
+  ! grep -q '^omz-installer' "$FAKE_LOG" || false
 }
 
 @test "omz partial moved aside" {
@@ -184,7 +184,7 @@ backups_of() {
   shell_install_fonts
   : > "$FAKE_LOG"
   shell_install_fonts
-  ! grep -q '^curl' "$FAKE_LOG"
+  ! grep -q '^curl' "$FAKE_LOG" || false
 }
 
 @test "font failure leaves no file" {

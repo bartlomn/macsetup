@@ -51,7 +51,7 @@ handed_over() {
   FAKE_ID_GROUPS="staff" run_bootstrap
   [ "$status" -ne 0 ]
   [[ "$output" == *"administrator"* ]]
-  ! grep -q '^brew ' "$FAKE_LOG"
+  ! grep -q '^brew ' "$FAKE_LOG" || false
   [ ! -e "$HOME/.macsetup" ]
 }
 
@@ -59,8 +59,8 @@ handed_over() {
   run_bootstrap
   [ "$status" -ne 0 ]
   [[ "$output" == *"Homebrew"* ]]
-  ! grep -q '^brew-installer' "$FAKE_LOG"
-  ! handed_over
+  ! grep -q '^brew-installer' "$FAKE_LOG" || false
+  ! handed_over || false
 }
 
 @test "no terminal with brew continues" {
@@ -68,7 +68,7 @@ handed_over() {
   run_bootstrap --all
   [ "$status" -eq 0 ]
   grep -q 'install.sh args=\[--all\]' "$FAKE_LOG"
-  ! grep -q '^sudo -v' "$FAKE_LOG"
+  ! grep -q '^sudo -v' "$FAKE_LOG" || false
 }
 
 @test "fresh Mac installs brew noninteractively, then gum, then clones" {
@@ -86,14 +86,14 @@ handed_over() {
   FAKE_BREW_INSTALL_FAIL=1 run_bootstrap_on_terminal
   [ "$status" -ne 0 ]
   [ ! -e "$HOME/.macsetup" ]
-  ! handed_over
+  ! handed_over || false
 }
 
 @test "brew installer download failure stops" {
   FAKE_CURL_FAIL=1 run_bootstrap_on_terminal
   [ "$status" -ne 0 ]
-  ! grep -q '^brew-installer' "$FAKE_LOG"
-  ! handed_over
+  ! grep -q '^brew-installer' "$FAKE_LOG" || false
+  ! handed_over || false
 }
 
 @test "gum failure continues" {
@@ -107,15 +107,15 @@ handed_over() {
   install_fake_brew
   FAKE_GUM_INSTALLED=1 run_bootstrap
   [ "$status" -eq 0 ]
-  ! grep -q '^brew install' "$FAKE_LOG"
+  ! grep -q '^brew install' "$FAKE_LOG" || false
   grep -q 'no_picker=\[\] failures=\[\]' "$FAKE_LOG"
 }
 
 @test "sudo failure, brew missing, stops" {
   FAKE_SUDO_FAIL=1 run_bootstrap_on_terminal
   [ "$status" -ne 0 ]
-  ! grep -q '^brew-installer' "$FAKE_LOG"
-  ! handed_over
+  ! grep -q '^brew-installer' "$FAKE_LOG" || false
+  ! handed_over || false
 }
 
 @test "sudo failure, brew present, continues" {
@@ -151,7 +151,7 @@ handed_over() {
   install_fake_brew
   MACSETUP_REPO_URL="$BATS_TEST_TMPDIR/no-such-repo.git" run_bootstrap
   [ "$status" -ne 0 ]
-  ! handed_over
+  ! handed_over || false
   [ ! -e "$HOME/.macsetup" ]
   [ -z "$(ls -a "$HOME" | grep '\.tmp\.')" ]
 }
@@ -273,6 +273,6 @@ handed_over() {
   export FAKE_CURL_FAIL=1
   run /bin/bash -c 'f="$(mktemp)" && curl -fsSL https://raw.githubusercontent.com/bartlomn/macsetup/main/bootstrap.sh -o "$f" && /bin/bash "$f"'
   [ "$status" -ne 0 ]
-  ! grep -q '^brew' "$FAKE_LOG"
-  ! grep -q '^sudo' "$FAKE_LOG"
+  ! grep -q '^brew' "$FAKE_LOG" || false
+  ! grep -q '^sudo' "$FAKE_LOG" || false
 }
